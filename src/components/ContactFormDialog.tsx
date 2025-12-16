@@ -104,17 +104,19 @@ export function ContactFormDialog({ open, onOpenChange, ctaText }: ContactFormDi
                 className="w-full"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                    Отправляем...
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-2">
-                    <Send className="w-4 h-4" />
-                    Отправить заявку
-                  </span>
-                )}
+                <span className="flex items-center gap-2">
+                  {isSubmitting ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                      Отправляем...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      Отправить заявку
+                    </>
+                  )}
+                </span>
               </Button>
             </form>
           </>
