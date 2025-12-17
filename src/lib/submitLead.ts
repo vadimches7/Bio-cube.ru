@@ -1,6 +1,18 @@
 import { getUTMParams, ServiceMode } from "@/contexts/ServiceModeContext";
 import { supabase } from "@/integrations/supabase/client";
 
+type GTMEvent = Record<string, unknown>;
+
+type GTMWindow = Window & {
+  dataLayer?: GTMEvent[];
+};
+
+function pushToDataLayer(event: GTMEvent): void {
+  const w = window as GTMWindow;
+  w.dataLayer = w.dataLayer || [];
+  w.dataLayer.push(event);
+}
+
 /**
  * submitLead - Единый helper для отправки заявок
  * 
@@ -136,8 +148,7 @@ export async function submitLead(
 
     // GTM: событие успешной заявки (для пикселя/метрики/GA через GTM)
     try {
-      (window as any).dataLayer = (window as any).dataLayer || [];
-      (window as any).dataLayer.push({
+      pushToDataLayer({
         event: "lead_submit_success",
         mode: meta.mode,
         form_name: meta.formName,
