@@ -77,6 +77,12 @@ Deno.serve(async (req) => {
   }
 
   try {
+    console.log("[lead-webhook] Forwarding lead", {
+      mode: payload.mode,
+      form_name: payload.form_name,
+      messenger: payload.messenger,
+    });
+
     const res = await fetch(webhookUrl, {
       method: "POST",
       headers: {
@@ -85,9 +91,16 @@ Deno.serve(async (req) => {
       body: JSON.stringify(payload),
     });
 
+    const text = await res.text().catch(() => "");
+    const preview = text.length > 400 ? `${text.slice(0, 400)}…` : text;
+
+    console.log("[lead-webhook] Webhook response", {
+      status: res.status,
+      ok: res.ok,
+      body_preview: preview,
+    });
+
     if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      console.error("[lead-webhook] Webhook error", res.status, text);
       return json(
         { ok: false, error: `Webhook responded with HTTP ${res.status}` },
         { status: 502 },
