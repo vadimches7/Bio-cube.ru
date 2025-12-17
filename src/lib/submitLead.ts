@@ -1,4 +1,5 @@
 import { getUTMParams, ServiceMode } from "@/contexts/ServiceModeContext";
+import { supabase } from "@/integrations/supabase/client";
 
 /**
  * submitLead - Единый helper для отправки заявок
@@ -116,33 +117,20 @@ export async function submitLead(
     timestamp: new Date().toISOString(),
   };
   
-  // 5. Получаем URL вебхука из env
-  const webhookUrl = import.meta.env.VITE_ALBATO_WEBHOOK_URL;
-  
-  if (!webhookUrl) {
-    // В dev-режиме просто логируем
-    console.log("[submitLead] Webhook URL не задан. Payload:", payload);
-    
-    // Симулируем успешную отправку для разработки
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setRateLimitTimestamp();
-    return { success: true };
-  }
-  
-  // 6. Отправка на вебхук
+  // 5. Отправка через backend-функцию (обходит CORS и не раскрывает URL вебхука на клиенте)
   try {
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
+    const { data, error } = await supabase.functions.invoke("lead-webhook", {
+      body: payload,
     });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+
+    if (error) {
+      throw error;
     }
-    
+
+    if ((data as any)?.skipped) {
+      console.warn("[submitLead] Webhook URL не задан на backend — заявка не отправлена наружу.");
+    }
+
     // Устанавливаем rate limit
     setRateLimitTimestamp();
 
@@ -160,13 +148,13 @@ export async function submitLead(
     } catch {
       // no-op
     }
-    
+
     return { success: true };
   } catch (error) {
     console.error("[submitLead] Error:", error);
-    return { 
-      success: false, 
-      error: "Ошибка отправки. Попробуйте позже или позвоните нам." 
+    return {
+      success: false,
+      error: "Ошибка отправки. Попробуйте позже или позвоните нам.",
     };
   }
 }
