@@ -5,30 +5,14 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const beforeAfterCases = [
   {
     id: 1,
-    title: "Морской аквариум после запуска",
-    problem: "Мутная вода, погибающие кораллы",
-    solution: "Полная диагностика, замена системы фильтрации, лечение рыб",
-    timeframe: "3 недели",
-    beforeGradient: "linear-gradient(135deg, hsl(40 30% 25%) 0%, hsl(35 25% 18%) 100%)",
-    afterGradient: "linear-gradient(135deg, hsl(200 60% 35%) 0%, hsl(180 50% 28%) 100%)",
-  },
-  {
-    id: 2,
-    title: "Пресноводный аквариум",
-    problem: "Зелёная вода, водоросли везде",
-    solution: "Балансировка освещения, CO2, питательных веществ",
-    timeframe: "10 дней",
-    beforeGradient: "linear-gradient(135deg, hsl(100 40% 25%) 0%, hsl(95 35% 18%) 100%)",
-    afterGradient: "linear-gradient(135deg, hsl(145 50% 35%) 0%, hsl(160 45% 28%) 100%)",
-  },
-  {
-    id: 3,
-    title: "Запущенный аквариум",
-    problem: "Не обслуживался 2 года",
-    solution: "Глубокая чистка, замена грунта, перезапуск биофильтрации",
-    timeframe: "1 месяц",
-    beforeGradient: "linear-gradient(135deg, hsl(30 25% 20%) 0%, hsl(25 20% 15%) 100%)",
-    afterGradient: "linear-gradient(135deg, hsl(195 55% 35%) 0%, hsl(185 50% 28%) 100%)",
+    title: "Перезапуск запущенного аквариума (травник → цихлиды)",
+    problem:
+      "Запущенный травник на питательном грунте (чёрный гранулированный аквасойл): мутная вода, общий дисбаланс, обслуживание «не в радость».",
+    solution:
+      "Перезапуск под «минимум заморочек»: очистка и ревизия оборудования, перезапуск биофильтрации, оформление под цихлид с искусственными декорациями.",
+    timeframe: "1 визит + стабилизация",
+    beforeImageSrc: "/cases/case-001-before.jpg",
+    afterImageSrc: "/cases/case-001-after.jpg",
   },
 ];
 
@@ -41,6 +25,7 @@ export function BeforeAfterSection() {
   if (mode !== "service") return null;
 
   const currentCase = beforeAfterCases[currentIndex];
+  const hasMultipleCases = beforeAfterCases.length > 1;
 
   const handlePrev = () => {
     setCurrentIndex(prev => (prev === 0 ? beforeAfterCases.length - 1 : prev - 1));
@@ -82,23 +67,41 @@ export function BeforeAfterSection() {
           >
             <div className="relative h-80 md:h-96">
               {/* After (full width, behind) */}
-              <div 
-                className="absolute inset-0 flex items-center justify-center"
-                style={{ background: currentCase.afterGradient }}
-              >
-                <div className="caustic-overlay opacity-40" />
-                <span className="text-2xl font-serif font-bold text-foreground/80">После</span>
+              <div className="absolute inset-0">
+                <img
+                  src={currentCase.afterImageSrc}
+                  alt={`${currentCase.title} — после`}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-card/85 via-card/10 to-transparent" />
+                <div className="absolute left-4 top-4">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-background/10 backdrop-blur text-xs text-foreground/90">
+                    После
+                  </span>
+                </div>
+                <div className="caustic-overlay opacity-30" />
               </div>
               
               {/* Before (clipped) */}
               <div 
-                className="absolute inset-0 flex items-center justify-center"
+                className="absolute inset-0"
                 style={{ 
-                  background: currentCase.beforeGradient,
                   clipPath: `inset(0 ${100 - sliderPosition}% 0 0)`,
                 }}
               >
-                <span className="text-2xl font-serif font-bold text-foreground/60">До</span>
+                <img
+                  src={currentCase.beforeImageSrc}
+                  alt={`${currentCase.title} — до`}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-card/85 via-card/10 to-transparent" />
+                <div className="absolute left-4 top-4">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-background/10 backdrop-blur text-xs text-foreground/90">
+                    До
+                  </span>
+                </div>
               </div>
               
               {/* Slider line */}
@@ -129,20 +132,22 @@ export function BeforeAfterSection() {
                 <h3 className="font-serif text-xl md:text-2xl font-semibold">
                   {currentCase.title}
                 </h3>
-                <div className="flex items-center gap-2">
-                  <button 
-                    onClick={handlePrev}
-                    className="w-10 h-10 rounded-full border border-border/50 flex items-center justify-center hover:bg-muted/50 transition-colors"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                  <button 
-                    onClick={handleNext}
-                    className="w-10 h-10 rounded-full border border-border/50 flex items-center justify-center hover:bg-muted/50 transition-colors"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                </div>
+                {hasMultipleCases ? (
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={handlePrev}
+                      className="w-10 h-10 rounded-full border border-border/50 flex items-center justify-center hover:bg-muted/50 transition-colors"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+                    <button 
+                      onClick={handleNext}
+                      className="w-10 h-10 rounded-full border border-border/50 flex items-center justify-center hover:bg-muted/50 transition-colors"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </div>
+                ) : null}
               </div>
               
               <div className="grid md:grid-cols-3 gap-4 text-sm">
@@ -161,20 +166,22 @@ export function BeforeAfterSection() {
               </div>
               
               {/* Dots */}
-              <div className="flex items-center justify-center gap-2 mt-6">
-                {beforeAfterCases.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      setCurrentIndex(i);
-                      setSliderPosition(50);
-                    }}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      i === currentIndex ? 'w-6 bg-amber' : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
-                    }`}
-                  />
-                ))}
-              </div>
+              {hasMultipleCases ? (
+                <div className="flex items-center justify-center gap-2 mt-6">
+                  {beforeAfterCases.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setCurrentIndex(i);
+                        setSliderPosition(50);
+                      }}
+                      className={`w-2 h-2 rounded-full transition-all ${
+                        i === currentIndex ? 'w-6 bg-amber' : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

@@ -1,8 +1,21 @@
-import { Droplets, Mail, Phone, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Droplets, Mail, Phone, MapPin, Send, MessageCircle } from "lucide-react";
+import { BioCubeLogo } from "@/components/BioCubeLogo";
+import {
+  CONTACT_ADDRESS,
+  CONTACT_EMAIL,
+  CONTACT_PHONE_E164,
+  COPYRIGHT,
+  LEGAL_INN,
+  LEGAL_NAME,
+  LEGAL_OGRNIP,
+  TELEGRAM_LINK,
+  WHATSAPP_LINK,
+} from "@/lib/contact";
 
 export function Footer() {
   return (
-    <footer className="py-12 relative overflow-hidden border-t border-border/30">
+    <footer id="contacts" className="py-12 relative overflow-hidden border-t border-border/30">
       <div className="absolute inset-0 bg-gradient-dark" />
       
       <div className="container relative z-10 px-4">
@@ -10,9 +23,7 @@ export function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-bio/20 flex items-center justify-center">
-                <Droplets className="w-5 h-5 text-bio" />
-              </div>
+              <BioCubeLogo className="h-10 w-10" />
               <span className="font-serif text-xl font-bold">Bio-Cube</span>
             </div>
             <p className="text-sm text-muted-foreground max-w-md mb-4">
@@ -27,15 +38,31 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-bio" />
-                +7 (495) 123-45-67
+                <a href={`tel:${CONTACT_PHONE_E164}`} className="hover:text-foreground transition-colors">
+                  Позвонить
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Send className="w-4 h-4 text-bio" />
+                <a href={TELEGRAM_LINK} target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">
+                  Telegram
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <MessageCircle className="w-4 h-4 text-bio" />
+                <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">
+                  WhatsApp
+                </a>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-bio" />
-                info@bio-cube.ru
+                <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-foreground transition-colors">
+                  {CONTACT_EMAIL}
+                </a>
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-bio" />
-                Москва, ул. Примерная, 1
+                {CONTACT_ADDRESS}
               </li>
             </ul>
           </div>
@@ -44,20 +71,25 @@ export function Footer() {
           <div>
             <h4 className="font-serif font-semibold mb-4">Услуги</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-bio transition-colors">Аквариумы под ключ</a></li>
-              <li><a href="#" className="hover:text-bio transition-colors">Обслуживание</a></li>
-              <li><a href="#" className="hover:text-bio transition-colors">Спасение аквариумов</a></li>
-              <li><a href="#" className="hover:text-bio transition-colors">Консультации</a></li>
+              <li><Link to="/?mode=installation" className="hover:text-bio transition-colors">Аквариумы под ключ</Link></li>
+              <li><Link to="/?mode=service" className="hover:text-bio transition-colors">Обслуживание</Link></li>
+              <li><Link to="/?mode=service" className="hover:text-bio transition-colors">Спасение аквариумов</Link></li>
+              <li><Link to="/?mode=installation" className="hover:text-bio transition-colors">Консультации</Link></li>
             </ul>
           </div>
         </div>
         
         {/* Bottom */}
         <div className="pt-8 border-t border-border/30 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>© 2024 Bio-Cube. Все права защищены.</p>
+          <div className="text-center md:text-left space-y-1">
+            <p>{COPYRIGHT}</p>
+            <p className="text-xs text-muted-foreground/80">
+              {LEGAL_NAME} • ИНН: {LEGAL_INN} • ОГРНИП: {LEGAL_OGRNIP}
+            </p>
+          </div>
           <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-bio transition-colors">Политика конфиденциальности</a>
-            <a href="#" className="hover:text-bio transition-colors">Договор оферты</a>
+            <Link to="/privacy" className="hover:text-bio transition-colors">Политика конфиденциальности</Link>
+            <Link to="/offer" className="hover:text-bio transition-colors">Договор оферты</Link>
           </div>
         </div>
       </div>

@@ -3,7 +3,27 @@ import { useServiceMode } from "@/contexts/ServiceModeContext";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const installationCases = [
+type InstallationCase = {
+  id: number;
+  title: string;
+  location: string;
+  volume: string;
+  description: string;
+  image: string; // gradient/background
+};
+
+type ServiceCase = {
+  id: number;
+  title: string;
+  problem: string;
+  solution: string;
+  result: string;
+  imageSrc: string; // public URL
+};
+
+type CaseItem = InstallationCase | ServiceCase;
+
+const installationCases: InstallationCase[] = [
   {
     id: 1,
     title: "Морской риф в пентхаусе",
@@ -30,30 +50,14 @@ const installationCases = [
   },
 ];
 
-const serviceCases = [
+const serviceCases: ServiceCase[] = [
   {
     id: 1,
-    title: "Спасение морского аквариума",
-    problem: "Массовая гибель кораллов, мутная вода",
-    solution: "Диагностика, замена фильтрации, лечение",
-    result: "Восстановлен за 3 недели",
-    image: "linear-gradient(135deg, hsl(38 60% 20%) 0%, hsl(30 50% 15%) 100%)",
-  },
-  {
-    id: 2,
-    title: "Борьба с водорослями",
-    problem: "Зелёная вода, налёт на стёклах",
-    solution: "Балансировка света и CO2, специальные добавки",
-    result: "Кристальная вода за 10 дней",
-    image: "linear-gradient(135deg, hsl(145 50% 18%) 0%, hsl(140 40% 12%) 100%)",
-  },
-  {
-    id: 3,
-    title: "Реанимация запущенного аквариума",
-    problem: "Не обслуживался 2 года, запах",
-    solution: "Глубокая чистка, замена грунта, перезапуск",
-    result: "Полное восстановление экосистемы",
-    image: "linear-gradient(135deg, hsl(200 40% 18%) 0%, hsl(210 35% 12%) 100%)",
+    title: "Перезапуск запущенного аквариума",
+    problem: "Запущенный травник на питательном грунте-аквасойле, мутная вода и дисбаланс.",
+    solution: "Перезапуск под «без лишних заморочек»: ревизия оборудования, перезапуск биофильтрации, новое оформление.",
+    result: "Поселили цихлид и оформили под искусственный декор",
+    imageSrc: "/cases/case-001-after.jpg",
   },
 ];
 
@@ -61,11 +65,16 @@ export function CasesSection() {
   const { mode } = useServiceMode();
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   
-  const cases = mode === "installation" ? installationCases : serviceCases;
+  const cases: CaseItem[] = mode === "installation" ? installationCases : serviceCases;
   const title = mode === "installation" ? "Наши проекты" : "Кейсы спасения";
   const subtitle = mode === "installation" 
     ? "Каждый аквариум — уникальный проект под архитектуру и пожелания заказчика"
     : "Реальные истории спасения аквариумов наших клиентов";
+
+  const gridClass =
+    cases.length === 1
+      ? "grid md:grid-cols-1 gap-6 max-w-3xl mx-auto"
+      : "grid md:grid-cols-2 lg:grid-cols-3 gap-6";
 
   return (
     <section className="section-padding relative overflow-hidden">
@@ -85,7 +94,7 @@ export function CasesSection() {
         </div>
         
         {/* Cases grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={gridClass}>
           {cases.map((item) => (
             <div
               key={item.id}
@@ -101,7 +110,15 @@ export function CasesSection() {
               {/* Image placeholder */}
               <div 
                 className="h-48 md:h-56 rounded-t-2xl relative overflow-hidden"
-                style={{ background: item.image }}
+                style={
+                  "imageSrc" in item
+                    ? {
+                        backgroundImage: `url(${item.imageSrc})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }
+                    : { background: item.image }
+                }
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
                 <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
@@ -126,27 +143,27 @@ export function CasesSection() {
                 {mode === "installation" ? (
                   <>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                      <span>{(item as typeof installationCases[0]).location}</span>
+                      <span>{(item as InstallationCase).location}</span>
                       <span>•</span>
-                      <span>{(item as typeof installationCases[0]).volume}</span>
+                      <span>{(item as InstallationCase).volume}</span>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      {(item as typeof installationCases[0]).description}
+                      {(item as InstallationCase).description}
                     </p>
                   </>
                 ) : (
                   <div className="space-y-2 text-sm">
                     <div className="flex gap-2">
                       <span className="text-destructive">Проблема:</span>
-                      <span className="text-muted-foreground">{(item as typeof serviceCases[0]).problem}</span>
+                      <span className="text-muted-foreground">{(item as ServiceCase).problem}</span>
                     </div>
                     <div className="flex gap-2">
                       <span className="text-amber">Решение:</span>
-                      <span className="text-muted-foreground">{(item as typeof serviceCases[0]).solution}</span>
+                      <span className="text-muted-foreground">{(item as ServiceCase).solution}</span>
                     </div>
                     <div className="flex gap-2">
                       <span className="text-bio">Результат:</span>
-                      <span className="text-muted-foreground">{(item as typeof serviceCases[0]).result}</span>
+                      <span className="text-muted-foreground">{(item as ServiceCase).result}</span>
                     </div>
                   </div>
                 )}
@@ -156,12 +173,14 @@ export function CasesSection() {
         </div>
         
         {/* CTA */}
-        <div className="text-center mt-12">
-          <Button variant="outline-bio" size="lg">
-            Смотреть все проекты
-            <ArrowRight className="w-4 h-4" />
-          </Button>
-        </div>
+        {mode === "installation" ? (
+          <div className="text-center mt-12">
+            <Button variant="outline-bio" size="lg">
+              Смотреть все проекты
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+        ) : null}
       </div>
     </section>
   );

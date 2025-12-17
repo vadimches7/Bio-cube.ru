@@ -2,19 +2,26 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useServiceMode } from "@/contexts/ServiceModeContext";
 import { ContactFormDialog } from "@/components/ContactFormDialog";
-import { ServiceModeSwitch } from "@/components/ServiceModeSwitch";
 import { Shield, Clock, Droplets, ChevronDown, Award, Beaker } from "lucide-react";
 
-const trustBadges = [
-  { icon: Award, text: "15+ лет опыта" },
-  { icon: Shield, text: "Договор + гарантия 5 лет" },
-  { icon: Beaker, text: "Тесты воды + экстренные выезды" },
-];
+const trustBadgesByMode = {
+  installation: [
+    { icon: Award, text: "15+ лет опыта" },
+    { icon: Shield, text: "Договор + гарантия 5 лет" },
+    { icon: Droplets, text: "Проект под интерьер" },
+  ],
+  service: [
+    { icon: Beaker, text: "Тесты воды + экстренные выезды" },
+    { icon: Shield, text: "Без лишних работ" },
+    { icon: Clock, text: "Выезд за 24ч (экстренно — 4ч)" },
+  ],
+} as const;
 
 export function HeroSection() {
   const { mode } = useServiceMode();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogCta, setDialogCta] = useState("");
+  const trustBadges = trustBadgesByMode[mode];
 
   const content = {
     installation: {
@@ -54,12 +61,7 @@ export function HeroSection() {
         <div className="absolute top-1/3 right-1/3 w-64 h-64 bg-amber/5 rounded-full blur-3xl animate-float delay-4" />
       )}
       
-      <div className="container relative z-10 px-4 pt-20 pb-12">
-        {/* Mode Switch */}
-        <div className="flex justify-center mb-12 animate-fade-up">
-          <ServiceModeSwitch />
-        </div>
-        
+      <div className="container relative z-10 px-4 pt-20 pb-24 sm:pb-16">
         {/* Hero Content */}
         <div className="max-w-4xl mx-auto text-center space-y-8">
           {/* Tagline */}
@@ -86,9 +88,22 @@ export function HeroSection() {
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: "0.5s" }}>
             {c.subtitle}
           </p>
+
+          {/* Trust badges */}
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 pt-6 animate-fade-in" style={{ animationDelay: "0.6s" }}>
+            {trustBadges.map((badge, i) => (
+              <div
+                key={i}
+                className={mode === "installation" ? "badge-bio" : "badge-amber"}
+              >
+                <badge.icon className="w-4 h-4" />
+                <span>{badge.text}</span>
+              </div>
+            ))}
+          </div>
           
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-fade-in" style={{ animationDelay: "0.6s" }}>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-fade-in" style={{ animationDelay: "0.7s" }}>
             <Button 
               variant={mode === "installation" ? "bio" : "amber"} 
               size="xl"
@@ -100,27 +115,17 @@ export function HeroSection() {
               {c.secondaryCta}
             </Button>
           </div>
-          
-          {/* Trust badges */}
-          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 pt-8 animate-fade-in" style={{ animationDelay: "0.7s" }}>
-            {trustBadges.map((badge, i) => (
-              <div 
-                key={i} 
-                className="badge-bio"
-              >
-                <badge.icon className="w-4 h-4" />
-                <span>{badge.text}</span>
-              </div>
-            ))}
-          </div>
         </div>
-        
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-fade-in" style={{ animationDelay: "0.9s" }}>
-          <span className="text-xs text-muted-foreground uppercase tracking-widest">Листайте</span>
-          <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex justify-center pt-2">
-            <div className="w-1 h-2 bg-bio rounded-full animate-hero-scroll" />
-          </div>
+      </div>
+
+      {/* Scroll indicator (опущен ниже, чтобы не пересекаться с бейджами) */}
+      <div
+        className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-fade-in z-10"
+        style={{ animationDelay: "0.9s" }}
+      >
+        <span className="text-xs text-muted-foreground uppercase tracking-widest">Листайте</span>
+        <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex justify-center pt-2">
+          <div className={mode === "installation" ? "w-1 h-2 bg-bio rounded-full animate-hero-scroll" : "w-1 h-2 bg-amber rounded-full animate-hero-scroll"} />
         </div>
       </div>
       

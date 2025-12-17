@@ -2,11 +2,17 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useServiceMode } from "@/contexts/ServiceModeContext";
 import { ContactFormDialog } from "@/components/ContactFormDialog";
-import { Phone, MessageCircle, ArrowRight } from "lucide-react";
+import { Phone, MessageCircle, ArrowRight, Zap } from "lucide-react";
+import {
+  CONTACT_PHONE_E164,
+  TELEGRAM_LINK,
+  WHATSAPP_LINK,
+} from "@/lib/contact";
 
 export function FinalCTASection() {
   const { mode } = useServiceMode();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [prefillComment, setPrefillComment] = useState<string | undefined>(undefined);
 
   const content = {
     installation: {
@@ -57,24 +63,52 @@ export function FinalCTASection() {
             <Button 
               variant={mode === "installation" ? "bio" : "amber"} 
               size="xl"
-              onClick={() => setDialogOpen(true)}
+              onClick={() => {
+                setPrefillComment(undefined);
+                setDialogOpen(true);
+              }}
             >
               {c.cta}
               <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button variant="outline-light" size="xl">
-              <Phone className="w-5 h-5" />
-              +7 (495) 123-45-67
+            {mode === "service" && (
+              <Button
+                variant="outline-light"
+                size="xl"
+                onClick={() => {
+                  setPrefillComment("СРОЧНО: нужна помощь (выезд до 4 часов). Опишите, что происходит с аквариумом.");
+                  setDialogOpen(true);
+                }}
+              >
+                <Zap className="w-5 h-5 text-amber" />
+                Срочно (до 4 часов)
+              </Button>
+            )}
+            <Button asChild variant="outline-light" size="xl">
+              <a href={`tel:${CONTACT_PHONE_E164}`}>
+                <Phone className="w-5 h-5" />
+                Позвонить
+              </a>
             </Button>
           </div>
           
           {/* Alternative contact */}
           <div className="mt-8 flex items-center justify-center gap-6 text-sm text-muted-foreground relative">
-            <a href="#" className="flex items-center gap-2 hover:text-bio transition-colors">
+            <a
+              href={WHATSAPP_LINK}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 hover:text-bio transition-colors"
+            >
               <MessageCircle className="w-4 h-4" />
               WhatsApp
             </a>
-            <a href="#" className="flex items-center gap-2 hover:text-bio transition-colors">
+            <a
+              href={TELEGRAM_LINK}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 hover:text-bio transition-colors"
+            >
               <MessageCircle className="w-4 h-4" />
               Telegram
             </a>
@@ -86,6 +120,8 @@ export function FinalCTASection() {
         open={dialogOpen} 
         onOpenChange={setDialogOpen}
         ctaText={c.cta}
+        formName="final_cta"
+        prefillComment={prefillComment}
       />
     </section>
   );
