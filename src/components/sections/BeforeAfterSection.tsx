@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { useServiceMode } from "@/contexts/ServiceModeContext";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -16,7 +16,7 @@ const beforeAfterCases = [
   },
 ];
 
-export function BeforeAfterSection() {
+export const BeforeAfterSection = forwardRef<HTMLElement, object>((_, ref) => {
   const { mode } = useServiceMode();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sliderPosition, setSliderPosition] = useState(50);
@@ -38,7 +38,7 @@ export function BeforeAfterSection() {
   };
 
   return (
-    <section className="section-padding relative overflow-hidden">
+    <section ref={ref} className="section-padding relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-dark" />
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-amber/5 rounded-full blur-3xl" />
@@ -188,4 +188,6 @@ export function BeforeAfterSection() {
       </div>
     </section>
   );
-}
+});
+
+BeforeAfterSection.displayName = "BeforeAfterSection";

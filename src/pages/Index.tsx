@@ -43,28 +43,20 @@ function IndexContent() {
           <ServiceProblemsSection />
           <ServiceVisitChecklistSection />
           <ServiceFormatsSection />
-
-          <section id="cases">
-            <CasesSection />
-          </section>
-
+          <CasesSection />
           <BeforeAfterSection />
         </>
       )}
 
-      {/* Installation: стройная “под ключ” структура */}
+      {/* Installation: стройная "под ключ" структура */}
       {mode === "installation" && (
         <>
-          <section id="cases">
-            <CasesSection />
-          </section>
-          <section id="process">
-            <ProcessSection />
-          </section>
+          <CasesSection />
+          <ProcessSection />
         </>
       )}
 
-      {/* Общие “закрывающие” секции */}
+      {/* Общие "закрывающие" секции */}
       {mode === "installation" && <GuaranteesSection />}
       <TeamSection />
       <ReviewsSection />

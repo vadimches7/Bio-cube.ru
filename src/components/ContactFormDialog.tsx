@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,13 +24,13 @@ interface ContactFormDialogProps {
   prefillComment?: string;
 }
 
-export function ContactFormDialog({ 
+export const ContactFormDialog = forwardRef<HTMLDivElement, ContactFormDialogProps>(({ 
   open, 
   onOpenChange, 
   ctaText,
   formName = "contact_form",
   prefillComment
-}: ContactFormDialogProps) {
+}, ref) => {
   const { mode } = useServiceMode();
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -259,4 +259,6 @@ export function ContactFormDialog({
       </DialogContent>
     </Dialog>
   );
-}
+});
+
+ContactFormDialog.displayName = "ContactFormDialog";
