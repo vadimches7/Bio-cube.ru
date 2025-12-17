@@ -1,5 +1,11 @@
 import { getUTMParams, ServiceMode } from "@/contexts/ServiceModeContext";
-import { supabase } from "@/integrations/supabase/client";
+import { createClient } from "@supabase/supabase-js";
+
+// Hardcoded fallback for when env vars aren't loaded
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://idwakouvktoqyompfbtj.supabase.co";
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlkd2Frb3V2a3RvcXlvbXBmYnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5MDI5NjYsImV4cCI6MjA4MTQ3ODk2Nn0.W6UfpI9_zNz0yNdhmHyPlZEz69lVvm-WyQbMnT2hCi0";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /**
  * submitLeadV2 - единый helper для отправки заявок (без проверок VITE_* env на клиенте)
