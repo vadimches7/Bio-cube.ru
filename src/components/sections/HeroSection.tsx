@@ -133,6 +133,7 @@ export function HeroSection() {
         open={dialogOpen} 
         onOpenChange={setDialogOpen}
         ctaText={dialogCta}
+        formName="hero_cta"
       />
     </section>
   );
