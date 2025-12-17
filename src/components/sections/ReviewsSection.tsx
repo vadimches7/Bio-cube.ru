@@ -42,12 +42,13 @@ export function ReviewsSection() {
               {reviewImageUrls.map((src, i) => (
                 <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
                   <div className="card-premium p-4 h-full">
-                    <div className="rounded-xl overflow-hidden bg-muted/20 border border-border/50">
+                    {/* Белая подложка, чтобы скрины разных размеров выглядели единообразно */}
+                    <div className="rounded-xl bg-white border border-white/10 p-2">
                       <div className="relative h-44 md:h-52 lg:h-56">
                         <img
                           src={src}
                           alt={`Отзыв ${i + 1}`}
-                          className="absolute inset-0 w-full h-full object-contain"
+                          className="absolute inset-0 w-full h-full object-contain bg-white"
                           loading={i < 3 ? "eager" : "lazy"}
                         />
                       </div>

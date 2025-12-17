@@ -145,6 +145,21 @@ export async function submitLead(
     
     // Устанавливаем rate limit
     setRateLimitTimestamp();
+
+    // GTM: событие успешной заявки (для пикселя/метрики/GA через GTM)
+    try {
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      (window as any).dataLayer.push({
+        event: "lead_submit_success",
+        mode: meta.mode,
+        form_name: meta.formName,
+        messenger: formData.messenger || "phone",
+        has_comment: Boolean(formData.comment?.trim()),
+        ...getUTMParams(),
+      });
+    } catch {
+      // no-op
+    }
     
     return { success: true };
   } catch (error) {
@@ -160,4 +175,5 @@ export async function submitLead(
  * Типы статусов формы
  */
 export type FormStatus = "idle" | "loading" | "success" | "error";
+
 
