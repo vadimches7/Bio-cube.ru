@@ -67,7 +67,7 @@ export function ModeSelectDialog() {
       {/* Контент модалки */}
       <div 
         className={cn(
-          "relative z-10 w-full max-w-2xl mx-4 p-8 md:p-12 rounded-3xl",
+          "relative z-10 w-full max-w-2xl mx-4 p-4 sm:p-6 md:p-12 rounded-3xl",
           "bg-gradient-to-br from-card/95 to-background/95",
           "border border-border/50 backdrop-blur-xl",
           "shadow-[0_0_100px_hsl(145_60%_45%/0.1)]",
@@ -75,33 +75,33 @@ export function ModeSelectDialog() {
         )}
       >
         {/* Заголовок */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bio/10 text-bio mb-6">
+        <div className="text-center mb-6 sm:mb-10">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bio/10 text-bio mb-4 sm:mb-6">
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-medium tracking-wide">BIO-CUBE</span>
           </div>
           
           <h2 
             id="mode-select-title"
-            className="font-serif text-3xl md:text-4xl font-bold mb-4"
+            className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4"
           >
             Что вам нужно?
           </h2>
           
-          <p className="text-muted-foreground text-lg max-w-md mx-auto">
+          <p className="hidden sm:block text-muted-foreground text-lg max-w-md mx-auto">
             Выберите направление, чтобы мы показали релевантную информацию
           </p>
         </div>
         
         {/* Карточки выбора */}
-        <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+        <div className="grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
           {/* Установка под ключ */}
           <ModeCard
             mode="installation"
             isRecommended={suggestedMode === "installation"}
             onSelect={handleSelect}
             icon={Droplets}
-            title="Установка под ключ"
+            title="Установка аквариума под ключ"
             description="Проектируем, изготавливаем и запускаем аквариум в вашем интерьере. Тихо. Чисто. С гарантией."
             badges={[
               { icon: Shield, text: "Гарантия 5 лет" },
@@ -116,7 +116,7 @@ export function ModeSelectDialog() {
             isRecommended={suggestedMode === "service"}
             onSelect={handleSelect}
             icon={Wrench}
-            title="Обслуживание / спасение"
+            title="Обслуживание аквариума"
             description="Диагностика, чистка, лечение рыб, борьба с водорослями. Снимем головную боль."
             badges={[
               { icon: Clock, text: "Выезд за 24ч" },
@@ -176,12 +176,13 @@ function ModeCard({
   };
   
   const c = colorClasses[color];
+  const primaryBadge = badges[0];
 
   return (
     <button
       onClick={() => onSelect(mode)}
       className={cn(
-        "group relative p-6 md:p-8 rounded-2xl text-left",
+        "group relative p-4 sm:p-6 md:p-8 rounded-2xl text-left",
         "bg-gradient-to-br from-muted/50 to-muted/20",
         "border transition-all duration-300",
         "hover:scale-[1.02] active:scale-[0.98]",
@@ -206,34 +207,43 @@ function ModeCard({
       
       {/* Иконка */}
       <div className={cn(
-        "w-14 h-14 rounded-xl mb-5 flex items-center justify-center",
+        "w-12 h-12 sm:w-14 sm:h-14 rounded-xl mb-4 sm:mb-5 flex items-center justify-center",
         "text-primary-foreground",
         "group-hover:scale-110 transition-transform duration-300",
         c.icon
       )}>
-        <Icon className="w-7 h-7" />
+        <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
       </div>
       
       {/* Текст */}
       <h3 className={cn(
-        "font-serif text-xl md:text-2xl font-bold mb-2 text-foreground transition-colors",
+        "font-serif text-lg sm:text-xl md:text-2xl font-bold mb-2 text-foreground transition-colors",
         c.text
       )}>
         {title}
       </h3>
       
-      <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-4">
+      <p className="hidden sm:block text-muted-foreground text-sm md:text-base leading-relaxed mb-4">
         {description}
       </p>
       
       {/* Бейджи */}
       <div className="flex flex-wrap gap-2">
-        {badges.map((badge, i) => (
-          <span key={i} className={cn("text-xs", c.badge)}>
-            <badge.icon className="w-3 h-3" />
-            {badge.text}
-          </span>
-        ))}
+        {/* Mobile: один бейдж, чтобы две карточки помещались на экран */}
+        <span className={cn("text-xs sm:hidden", c.badge)}>
+          <primaryBadge.icon className="w-3 h-3" />
+          {primaryBadge.text}
+        </span>
+
+        {/* Desktop/tablet: полный набор бейджей */}
+        <div className="hidden sm:flex flex-wrap gap-2">
+          {badges.map((badge, i) => (
+            <span key={i} className={cn("text-xs", c.badge)}>
+              <badge.icon className="w-3 h-3" />
+              {badge.text}
+            </span>
+          ))}
+        </div>
       </div>
       
       {/* Стрелка при ховере */}
