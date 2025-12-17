@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { useServiceMode } from "@/contexts/ServiceModeContext";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -61,7 +61,7 @@ const serviceCases: ServiceCase[] = [
   },
 ];
 
-export function CasesSection() {
+export const CasesSection = forwardRef<HTMLElement, object>((_, ref) => {
   const { mode } = useServiceMode();
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   
@@ -77,7 +77,7 @@ export function CasesSection() {
       : "grid md:grid-cols-2 lg:grid-cols-3 gap-6";
 
   return (
-    <section className="section-padding relative overflow-hidden">
+    <section ref={ref} className="section-padding relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-dark" />
       <div className="absolute top-1/3 left-0 w-96 h-96 bg-bio/5 rounded-full blur-3xl" />
@@ -184,4 +184,6 @@ export function CasesSection() {
       </div>
     </section>
   );
-}
+});
+
+CasesSection.displayName = "CasesSection";
