@@ -99,7 +99,8 @@
 
 1. **URL params** — replaceState не триггерит popstate, учтено
 2. **Модалка и Esc** — нужно перехватывать keydown на уровне документа
-3. **Формы** — webhook URL из env, нужен .env.example
+3. **Формы** — webhook URL из env, нужен шаблон env
+   - Примечание: из-за ограничений окружения в репозитории лежит `env.example` (без точки). Используйте его как шаблон для `.env`.
 4. **Роутинг** — SPA, react-router, mode в query params
 
 ---

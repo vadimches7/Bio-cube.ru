@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useServiceMode } from "@/contexts/ServiceModeContext";
-import { submitLead, FormStatus, getRateLimitRemaining } from "@/lib/submitLeadV2";
+import { submitLead, FormStatus, getRateLimitRemaining } from "@/lib/submitLead";
 import { CheckCircle2, Send, AlertCircle, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";

@@ -21,6 +21,60 @@ function asTrimmedString(v: unknown, maxLen: number) {
   return v.trim().slice(0, maxLen);
 }
 
+function asRecord(v: unknown): Record<string, unknown> {
+  if (v && typeof v === "object") return v as Record<string, unknown>;
+  return {};
+}
+
+function getClientIp(req: Request): string {
+  const cfIp = req.headers.get("cf-connecting-ip");
+  if (cfIp) return cfIp.trim();
+  const xff = req.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0]?.trim() || "unknown";
+  const xrip = req.headers.get("x-real-ip");
+  if (xrip) return xrip.trim();
+  return "unknown";
+}
+
+function parseAllowedOrigins(envValue: string | undefined): Set<string> {
+  const raw = (envValue ?? "").trim();
+  if (!raw) return new Set();
+  return new Set(
+    raw
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
+  );
+}
+
+function isOriginAllowed(origin: string | null, allowed: Set<string>): boolean {
+  if (allowed.size === 0) return true; // allowlist is not configured
+  if (!origin) return false;
+  return allowed.has(origin);
+}
+
+// In-memory rate limit (best-effort). Works per function instance.
+const RATE_LIMIT_WINDOW_MS = 60_000; // 60s
+const RATE_LIMIT_MAX = 3; // 3 requests per window
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+
+function checkRateLimit(key: string): { ok: boolean; retryAfterSec?: number } {
+  const now = Date.now();
+  const current = rateLimitStore.get(key);
+  if (!current || now >= current.resetAt) {
+    rateLimitStore.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return { ok: true };
+  }
+
+  if (current.count >= RATE_LIMIT_MAX) {
+    return { ok: false, retryAfterSec: Math.ceil((current.resetAt - now) / 1000) };
+  }
+
+  current.count += 1;
+  rateLimitStore.set(key, current);
+  return { ok: true };
+}
+
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -31,7 +85,33 @@ Deno.serve(async (req) => {
     return json({ ok: false, error: "Method not allowed" }, { status: 405 });
   }
 
-  let body: any;
+  // Basic request size guard (best-effort)
+  const contentLength = Number(req.headers.get("content-length") ?? "0");
+  if (Number.isFinite(contentLength) && contentLength > 50_000) {
+    return json({ ok: false, error: "Payload too large" }, { status: 413 });
+  }
+
+  // Optional origin allowlist
+  const allowedOrigins = parseAllowedOrigins(Deno.env.get("ALLOWED_ORIGINS"));
+  const origin = req.headers.get("origin");
+  if (!isOriginAllowed(origin, allowedOrigins)) {
+    console.warn("[lead-webhook] Blocked by origin allowlist", { origin });
+    return json({ ok: false, error: "Forbidden" }, { status: 403 });
+  }
+
+  // Best-effort rate limit
+  const ip = getClientIp(req);
+  const ua = (req.headers.get("user-agent") ?? "").slice(0, 120);
+  const rateKey = `${ip}|${ua}`;
+  const rl = checkRateLimit(rateKey);
+  if (!rl.ok) {
+    return json(
+      { ok: false, error: "Too many requests", retry_after_sec: rl.retryAfterSec ?? 60 },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSec ?? 60) } },
+    );
+  }
+
+  let body: unknown;
   try {
     body = await req.json();
   } catch (e) {
@@ -39,24 +119,33 @@ Deno.serve(async (req) => {
     return json({ ok: false, error: "Invalid JSON" }, { status: 400 });
   }
 
-  const payload = {
-    name: asTrimmedString(body?.name, 100),
-    phone: asTrimmedString(body?.phone, 50),
-    comment: asTrimmedString(body?.comment, 1000),
-    messenger: asTrimmedString(body?.messenger, 20),
+  const b = asRecord(body);
 
-    mode: asTrimmedString(body?.mode, 30),
-    form_name: asTrimmedString(body?.form_name, 60),
-    page_url: asTrimmedString(body?.page_url, 2048),
+  // Backend honeypot: bots often fill "website" field
+  const website = asTrimmedString(b["website"], 200);
+  if (website) {
+    console.warn("[lead-webhook] Honeypot triggered", { ip });
+    return json({ ok: true, skipped: true });
+  }
+
+  const payload = {
+    name: asTrimmedString(b["name"], 100),
+    phone: asTrimmedString(b["phone"], 50),
+    comment: asTrimmedString(b["comment"], 1000),
+    messenger: asTrimmedString(b["messenger"], 20),
+
+    mode: asTrimmedString(b["mode"], 30),
+    form_name: asTrimmedString(b["form_name"], 60),
+    page_url: asTrimmedString(b["page_url"], 2048),
 
     // UTM params (optional)
-    utm_source: asTrimmedString(body?.utm_source, 100),
-    utm_medium: asTrimmedString(body?.utm_medium, 100),
-    utm_campaign: asTrimmedString(body?.utm_campaign, 150),
-    utm_content: asTrimmedString(body?.utm_content, 150),
-    utm_term: asTrimmedString(body?.utm_term, 150),
+    utm_source: asTrimmedString(b["utm_source"], 100),
+    utm_medium: asTrimmedString(b["utm_medium"], 100),
+    utm_campaign: asTrimmedString(b["utm_campaign"], 150),
+    utm_content: asTrimmedString(b["utm_content"], 150),
+    utm_term: asTrimmedString(b["utm_term"], 150),
 
-    timestamp: asTrimmedString(body?.timestamp, 40),
+    timestamp: asTrimmedString(b["timestamp"], 40),
   };
 
   if (!payload.name || !payload.phone) {

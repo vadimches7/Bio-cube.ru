@@ -8,6 +8,14 @@
 
 - `src/pages/Index.tsx`
 
+## Базовая документация (что читать первым)
+
+- `docs/ARCHITECTURE.md` — как устроены режимы/роутинг/формы
+- `docs/CONTENT.md` — где и как менять контент
+- `docs/FORMS.md` — формы → CRM + дебаг
+- `docs/DEPLOY.md` — деплой на Netlify
+- `docs/RUNBOOK.md` — “что делать если”
+
 ## Секции (контент и верстка)
 
 - **Команда**: `src/components/sections/TeamSection.tsx`
@@ -48,6 +56,7 @@
 
 Если добавили больше скринов — увеличьте `REVIEW_IMAGES_COUNT` в `src/components/sections/ReviewsSection.tsx`
 или перейдём на явный список/JSON.
+
 
 
 

@@ -131,7 +131,7 @@ export async function submitLead(
   
   // 5. Отправка через backend-функцию (обходит CORS и не раскрывает URL вебхука на клиенте)
   try {
-    const { data, error } = await supabase.functions.invoke("lead-webhook", {
+    const { data, error } = await supabase.functions.invoke<{ skipped?: boolean }>("lead-webhook", {
       body: payload,
     });
 
@@ -139,7 +139,7 @@ export async function submitLead(
       throw error;
     }
 
-    if ((data as any)?.skipped) {
+    if (data?.skipped) {
       console.warn("[submitLead] Webhook URL не задан на backend — заявка не отправлена наружу.");
     }
 

@@ -23,4 +23,15 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
+  // shadcn/ui and a few shared-context files intentionally export helpers/constants alongside components.
+  // This doesn't break production; the rule is about DX for Fast Refresh, so we silence it locally.
+  {
+    files: [
+      "src/components/ui/**/*.{ts,tsx}",
+      "src/contexts/ServiceModeContext.tsx",
+    ],
+    rules: {
+      "react-refresh/only-export-components": "off",
+    },
+  },
 );
