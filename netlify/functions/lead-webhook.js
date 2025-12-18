@@ -50,37 +50,41 @@ function getQueryParamFromUrl(urlString, key) {
 }
 
 function buildQuizNoteFromComment(comment) {
-  const text = (comment ?? "").toString();
-  if (!text.trim()) return "";
+  const text = (comment ?? "").toString().trim();
+  if (!text) return "";
 
+  // 1) Try to extract from single-line format:
+  // "... Вы выбрали: - Проблема: ... - Срочность: ... - Объём: ..."
+  const marker = "вы выбрали:";
+  const idx = text.toLowerCase().indexOf(marker);
+  if (idx >= 0) {
+    const tail = text.slice(idx + marker.length).trim();
+    const parts = tail
+      .split(/\s+-\s+/g)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((s) => (s.startsWith("- ") ? s : `- ${s}`));
+
+    if (parts.length) return `Квиз:\n${parts.join("\n")}`;
+  }
+
+  // 2) Multi-line format: "Вы выбрали:" + lines starting with "- "
   const lines = text.split(/\r?\n/).map((l) => l.trim());
-
-  // Support both old and new templates.
-  const markers = ["Вы выбрали:", "Итог квиза:", "Итог квиза:-", "Итог квиза:"];
-  let startIdx = -1;
-  for (const m of markers) {
-    const idx = lines.findIndex((l) => l.toLowerCase() === m.toLowerCase());
-    if (idx >= 0) {
-      startIdx = idx + 1;
-      break;
+  const start = lines.findIndex((l) => l.toLowerCase() === "вы выбрали:");
+  if (start >= 0) {
+    const bullets = [];
+    for (let i = start + 1; i < lines.length; i++) {
+      const l = lines[i];
+      if (!l) continue;
+      if (l.toLowerCase().startsWith("комментар")) break;
+      if (l.startsWith("- ")) bullets.push(l);
     }
-  }
-  if (startIdx < 0) {
-    // Fallback: extract bullet-like segments
-    const bulletLines = lines.filter((l) => l.startsWith("- "));
-    return bulletLines.length ? `Квиз:\n${bulletLines.join("\n")}` : "";
+    if (bullets.length) return `Квиз:\n${bullets.join("\n")}`;
   }
 
-  const picked = [];
-  for (let i = startIdx; i < lines.length; i++) {
-    const l = lines[i];
-    if (!l) continue;
-    if (l.toLowerCase().startsWith("комментарий")) break;
-    if (l.startsWith("- ")) picked.push(l);
-  }
-
-  if (!picked.length) return "";
-  return `Квиз:\n${picked.join("\n")}`;
+  // 3) Fallback: extract any "- " lines
+  const bulletLines = lines.filter((l) => l.startsWith("- "));
+  return bulletLines.length ? `Квиз:\n${bulletLines.join("\n")}` : "";
 }
 
 exports.handler = async (event) => {
@@ -170,7 +174,7 @@ exports.handler = async (event) => {
     lead_name: `BioCube — ${mode} — ${form_name}`,
 
     // Note helpers (for amo "Примечание" / notes)
-    quiz_note: form_name === "quiz" ? buildQuizNoteFromComment(comment) : "",
+    quiz_note: form_name === "quiz" ? (buildQuizNoteFromComment(comment) || comment) : "",
   };
 
   if (!payload.name || !payload.phone) {
