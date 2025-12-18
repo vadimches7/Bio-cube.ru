@@ -18,10 +18,9 @@
 
 Netlify → Site settings → **Environment variables**
 
-Нужно для работы Supabase клиента (и отправки форм):
+Нужно для отправки форм в CRM через Albato (server-side proxy):
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `ALBATO_WEBHOOK_URL`
 
 Шаблон лежит в `env.example` (из-за ограничений окружения файл `.env.example` в репозитории не используем).
 
@@ -40,6 +39,6 @@ Netlify → Site settings → **Environment variables**
 
 - Открывается `/`
 - Открывается **прямой переход** на `/privacy` и `/offer`
-- Отправка формы: в DevTools → Network есть запрос на `/functions/v1/lead-webhook` (Supabase)
+- Отправка формы: в DevTools → Network есть запрос на `/.netlify/functions/lead-webhook` (Netlify Function)
 
 

@@ -1,5 +1,4 @@
 import { getUTMParams, ServiceMode } from "@/contexts/ServiceModeContext";
-import { getSupabaseClient } from "@/integrations/supabase/client";
 import { normalizeRuPhoneForCRM } from "@/lib/phone";
 
 type GTMEvent = Record<string, unknown>;
@@ -133,17 +132,20 @@ export async function submitLead(
   
   // 5. Отправка через backend-функцию (обходит CORS и не раскрывает URL вебхука на клиенте)
   try {
-    const supabase = getSupabaseClient();
-    const { data, error } = await supabase.functions.invoke<{ skipped?: boolean }>("lead-webhook", {
-      body: payload,
+    // Primary path: Netlify Function proxy (same-origin)
+    const res = await fetch("/.netlify/functions/lead-webhook", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
 
-    if (error) {
-      throw error;
+    const data = (await res.json().catch(() => ({}))) as { skipped?: boolean; error?: string };
+    if (!res.ok) {
+      throw new Error(data?.error || `HTTP ${res.status}`);
     }
 
     if (data?.skipped) {
-      console.warn("[submitLead] Webhook URL не задан на backend — заявка не отправлена наружу.");
+      console.warn("[submitLead] ALBATO_WEBHOOK_URL не задан на Netlify — заявка не отправлена наружу.");
     }
 
     // Устанавливаем rate limit

@@ -10,26 +10,18 @@
 
 1. Пользователь заполняет форму (`ContactFormDialog`)
 2. Клиент вызывает `submitLead(formData, meta)`
-3. `submitLead` вызывает Supabase Edge Function: `lead-webhook`
-4. `lead-webhook` форвардит payload в интеграцию (Albato/Make/Zapier/прямой webhook CRM)
+3. `submitLead` вызывает Netlify Function: `/.netlify/functions/lead-webhook`
+4. Netlify Function форвардит payload в интеграцию (Albato/Make/Zapier/прямой webhook CRM)
 
 ## Где что настраивается
 
 ### На стороне сайта (Netlify env)
 
-Нужно только для доступа к Supabase:
+Нужно только для форвардинга в CRM через Albato:
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `ALBATO_WEBHOOK_URL` — URL входящего вебхука Albato (или другого интегратора)
 
-### На стороне Supabase (Functions secrets)
-
-- `ALBATO_WEBHOOK_URL` — URL вебхука, который дальше доставляет лид в CRM  
-  (может быть Albato/Make, либо прямой endpoint CRM)
-
-Опционально:
-
-- `ALLOWED_ORIGINS` — allowlist Origin через запятую (если включали)
+ВАЖНО: `ALBATO_WEBHOOK_URL` нельзя делать `VITE_*`, иначе URL попадёт на клиент.
 
 ## Как проверить, что лид реально ушёл
 
@@ -37,7 +29,7 @@
 
 DevTools → **Network** → отправить форму → найти запрос:
 
-- `.../functions/v1/lead-webhook`
+- `/.netlify/functions/lead-webhook`
 
 Смотреть:
 
@@ -46,9 +38,7 @@ DevTools → **Network** → отправить форму → найти зап
 
 ### 2) Частые причины “форма показывает успех, но в CRM не пришло”
 
-- **`skipped: true` в ответе**: на backend не настроен webhook (`ALBATO_WEBHOOK_URL` пустой)
-- **429 Too many requests**: rate limit на Edge Function (best-effort)
-- **403 Forbidden**: включён allowlist `ALLOWED_ORIGINS`, а домен не добавлен
+- **`skipped: true` в ответе**: на Netlify не настроен webhook (`ALBATO_WEBHOOK_URL` пустой)
 - **400 Missing required fields**: пустые `name`/`phone` (или неправильно передались)
 - **502 Webhook responded**: внешний webhook/CRM ответил ошибкой
 
@@ -62,5 +52,12 @@ DevTools → **Network** → отправить форму → найти зап
 - `page_url`
 - `utm_*` (если есть)
 - `timestamp`
+
+Дополнительно для удобства маппинга в Albato:
+
+- `message` (алиас `comment`)
+- `form` (алиас `form_name`)
+- `source` (алиас `mode`)
+- `deal_name`, `lead_name` (удобные названия для сделки)
 
 

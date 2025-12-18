@@ -2,6 +2,9 @@
   command = "npm run build"
   publish = "dist"
 
+[functions]
+  directory = "netlify/functions"
+
 # React Router SPA: allow direct opens of /privacy, /offer, etc.
 [[redirects]]
   from = "/*"
