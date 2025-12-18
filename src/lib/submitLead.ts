@@ -1,5 +1,5 @@
 import { getUTMParams, ServiceMode } from "@/contexts/ServiceModeContext";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabaseClient } from "@/integrations/supabase/client";
 
 type GTMEvent = Record<string, unknown>;
 
@@ -131,6 +131,7 @@ export async function submitLead(
   
   // 5. Отправка через backend-функцию (обходит CORS и не раскрывает URL вебхука на клиенте)
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase.functions.invoke<{ skipped?: boolean }>("lead-webhook", {
       body: payload,
     });
