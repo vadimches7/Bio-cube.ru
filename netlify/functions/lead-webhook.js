@@ -40,6 +40,15 @@ function parseModeFromPageUrl(pageUrl) {
   return "";
 }
 
+function getQueryParamFromUrl(urlString, key) {
+  try {
+    const u = new URL(urlString);
+    return (u.searchParams.get(key) ?? "").trim();
+  } catch {
+    return "";
+  }
+}
+
 exports.handler = async (event) => {
   // CORS preflight (optional; mostly useful if you call it cross-origin)
   if (event.httpMethod === "OPTIONS") {
@@ -88,6 +97,18 @@ exports.handler = async (event) => {
   const comment = asTrimmedString(b.comment ?? b.message, 1000);
   const messenger = asTrimmedString(b.messenger, 20) || "phone";
 
+  // UTM: prefer explicit fields, fallback to extracting from page_url (?utm_*)
+  const utm_source =
+    asTrimmedString(b.utm_source, 100) || getQueryParamFromUrl(page_url, "utm_source");
+  const utm_medium =
+    asTrimmedString(b.utm_medium, 100) || getQueryParamFromUrl(page_url, "utm_medium");
+  const utm_campaign =
+    asTrimmedString(b.utm_campaign, 150) || getQueryParamFromUrl(page_url, "utm_campaign");
+  const utm_content =
+    asTrimmedString(b.utm_content, 150) || getQueryParamFromUrl(page_url, "utm_content");
+  const utm_term =
+    asTrimmedString(b.utm_term, 150) || getQueryParamFromUrl(page_url, "utm_term");
+
   const payload = {
     // Canonical fields
     name: asTrimmedString(b.name, 100),
@@ -99,11 +120,11 @@ exports.handler = async (event) => {
     page_url,
 
     // UTM (optional)
-    utm_source: asTrimmedString(b.utm_source, 100),
-    utm_medium: asTrimmedString(b.utm_medium, 100),
-    utm_campaign: asTrimmedString(b.utm_campaign, 150),
-    utm_content: asTrimmedString(b.utm_content, 150),
-    utm_term: asTrimmedString(b.utm_term, 150),
+    utm_source,
+    utm_medium,
+    utm_campaign,
+    utm_content,
+    utm_term,
 
     timestamp: asTrimmedString(b.timestamp, 40) || new Date().toISOString(),
 
