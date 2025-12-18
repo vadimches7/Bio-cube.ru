@@ -61,7 +61,7 @@ export function HeroSection() {
         <div className="absolute top-1/3 right-1/3 w-64 h-64 bg-amber/5 rounded-full blur-3xl animate-float delay-4" />
       )}
       
-      <div className="container relative z-10 px-4 pt-20 pb-24 sm:pb-16">
+      <div className="container relative z-10 px-4 pt-10 sm:pt-12 pb-24 sm:pb-16">
         {/* Hero Content */}
         <div className="max-w-4xl mx-auto text-center space-y-8">
           {/* Tagline */}

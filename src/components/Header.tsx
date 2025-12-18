@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useServiceMode } from "@/contexts/ServiceModeContext";
@@ -24,6 +24,26 @@ export function Header() {
   const { mode } = useServiceMode();
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const SCROLL_THRESHOLD_PX = 12;
+    let raf = 0;
+
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > SCROLL_THRESHOLD_PX);
+      });
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   const navItems: HeaderNavItem[] = useMemo(() => {
     if (mode === "service") {
@@ -51,8 +71,11 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-40",
-        "bg-background/60 backdrop-blur-xl border-b border-border/30",
+        "sticky top-0 z-40",
+        "transition-all duration-300",
+        isScrolled
+          ? "bg-background/70 backdrop-blur-xl border-b border-border/30 shadow-sm"
+          : "bg-transparent border-b border-transparent",
       )}
     >
       <div className="container px-4">
@@ -84,32 +107,51 @@ export function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <a
-              href={TELEGRAM_LINK}
-              target="_blank"
-              rel="noreferrer"
-              className="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-border/40 bg-muted/10 hover:bg-muted/20 transition-colors text-sm"
-              title="Открыть Telegram"
+            {/* Sticky CTA: shown only after scroll (fade + slide) */}
+            <div
+              className={cn(
+                "flex items-center gap-2",
+                "transition-all duration-300",
+                isScrolled ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1 pointer-events-none",
+              )}
+              aria-hidden={!isScrolled}
             >
-              <Send className="w-4 h-4 text-bio" />
-              <span className="hidden xl:inline">Telegram</span>
-            </a>
-            <a
-              href={WHATSAPP_LINK}
-              target="_blank"
-              rel="noreferrer"
-              className="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-border/40 bg-muted/10 hover:bg-muted/20 transition-colors text-sm"
-              title="Открыть WhatsApp"
-            >
-              <MessageCircle className="w-4 h-4 text-bio" />
-              <span className="hidden xl:inline">WhatsApp</span>
-            </a>
-            <Button asChild variant="outline-light" size="sm" className="hidden sm:inline-flex">
-              <a href={`tel:${CONTACT_PHONE_E164}`} className="gap-2">
-                <Phone className="w-4 h-4" />
-                <span>Позвонить</span>
+              {/* Mobile: icons only */}
+              <a
+                href={TELEGRAM_LINK}
+                target="_blank"
+                rel="noreferrer"
+                className={cn(
+                  "inline-flex items-center justify-center rounded-xl border border-border/40",
+                  "bg-muted/10 hover:bg-muted/20 transition-colors",
+                  "h-9 w-9 md:h-10 md:w-auto md:px-3 md:gap-2",
+                )}
+                title="Открыть Telegram"
+              >
+                <Send className="w-4 h-4 text-bio" />
+                <span className="hidden md:inline text-sm">Telegram</span>
               </a>
-            </Button>
+              <a
+                href={WHATSAPP_LINK}
+                target="_blank"
+                rel="noreferrer"
+                className={cn(
+                  "inline-flex items-center justify-center rounded-xl border border-border/40",
+                  "bg-muted/10 hover:bg-muted/20 transition-colors",
+                  "h-9 w-9 md:h-10 md:w-auto md:px-3 md:gap-2",
+                )}
+                title="Открыть WhatsApp"
+              >
+                <MessageCircle className="w-4 h-4 text-bio" />
+                <span className="hidden md:inline text-sm">WhatsApp</span>
+              </a>
+              <Button asChild variant="outline-light" size="sm" className="h-9 px-3 md:h-10">
+                <a href={`tel:${CONTACT_PHONE_E164}`} className="gap-2">
+                  <Phone className="w-4 h-4" />
+                  <span className="hidden sm:inline">Позвонить</span>
+                </a>
+              </Button>
+            </div>
 
             {/* Mobile menu */}
             <Sheet open={open} onOpenChange={setOpen}>

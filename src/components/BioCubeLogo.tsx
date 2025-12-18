@@ -1,21 +1,57 @@
+import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
+import { BRAND_LOGO_IMAGE } from "@/lib/brand";
 
 interface BioCubeLogoProps {
   className?: string;
+  /**
+   * - auto (default): render image logo, fallback to inline SVG if image missing
+   * - image: force image
+   * - svg: force inline svg (useful for watermark)
+   */
+  variant?: "auto" | "image" | "svg";
 }
 
 /**
  * BioCubeLogo — лёгкий inline-SVG логотип (без внешних ассетов).
  * Если у вас есть финальный файл логотипа в `public/`, можно заменить на <img src="/logo.svg" ... />.
  */
-export function BioCubeLogo({ className }: BioCubeLogoProps) {
+export function BioCubeLogo({ className, variant = "auto" }: BioCubeLogoProps) {
+  const [imageOk, setImageOk] = useState(true);
+
+  // If user forces svg — don't waste time on preloading.
+  const shouldTryImage = variant !== "svg";
+
+  const showImage = useMemo(() => {
+    if (!shouldTryImage) return false;
+    if (variant === "image") return true;
+    // auto
+    return imageOk;
+  }, [imageOk, shouldTryImage, variant]);
+
+  // Preload for faster swap in auto-mode; if missing, fallback to svg.
+  useEffect(() => {
+    if (variant !== "auto") return;
+    const img = new Image();
+    img.onload = () => setImageOk(true);
+    img.onerror = () => setImageOk(false);
+    img.src = BRAND_LOGO_IMAGE;
+  }, [variant]);
+
+  if (showImage) {
+    return (
+      <img
+        src={BRAND_LOGO_IMAGE}
+        alt="Bio‑Cube"
+        className={cn("h-9 w-9", className)}
+        loading="eager"
+        onError={() => setImageOk(false)}
+      />
+    );
+  }
+
   return (
-    <svg
-      viewBox="0 0 96 96"
-      aria-hidden="true"
-      className={cn("h-9 w-9", className)}
-      fill="none"
-    >
+    <svg viewBox="0 0 96 96" aria-hidden="true" className={cn("h-9 w-9", className)} fill="none">
       <defs>
         <linearGradient id="bioCubeGrad" x1="10" y1="10" x2="86" y2="86" gradientUnits="userSpaceOnUse">
           <stop stopColor="hsl(var(--bio-green))" />
@@ -32,18 +68,10 @@ export function BioCubeLogo({ className }: BioCubeLogoProps) {
       />
 
       {/* Wave */}
-      <path
-        d="M16 55c10-8 20-10 32-6c10 3 19 3 32-4"
-        stroke="url(#bioCubeGrad)"
-        strokeWidth="6"
-        strokeLinecap="round"
-      />
+      <path d="M16 55c10-8 20-10 32-6c10 3 19 3 32-4" stroke="url(#bioCubeGrad)" strokeWidth="6" strokeLinecap="round" />
 
       {/* Leaf */}
-      <path
-        d="M44 28c9 1 16 8 17 17c-9-1-16-8-17-17Z"
-        fill="url(#bioCubeGrad)"
-      />
+      <path d="M44 28c9 1 16 8 17 17c-9-1-16-8-17-17Z" fill="url(#bioCubeGrad)" />
 
       {/* Small bubble */}
       <circle cx="60.5" cy="38.5" r="3.5" fill="url(#bioCubeGrad)" />

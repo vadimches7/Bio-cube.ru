@@ -1,4 +1,4 @@
-import { ServiceModeProvider, useServiceMode } from "@/contexts/ServiceModeContext";
+import { useServiceMode } from "@/contexts/ServiceModeContext";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { TrustSection } from "@/components/sections/TrustSection";
 import { QuizSection } from "@/components/sections/QuizSection";
@@ -67,10 +67,6 @@ function IndexContent() {
   );
 }
 
-const Index = () => (
-  <ServiceModeProvider>
-    <IndexContent />
-  </ServiceModeProvider>
-);
-
-export default Index;
+export default function Index() {
+  return <IndexContent />;
+}

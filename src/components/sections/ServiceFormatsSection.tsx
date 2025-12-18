@@ -40,7 +40,7 @@ const serviceFormats = [
       "Если непонятно, почему “всё ломается” — начнём с диагностики. Объясним причину простыми словами и дадим план, что делать дальше.",
     who: "когда нужно понять причину и не делать лишнего.",
     result: "понятный план стабилизации + рекомендации по уходу.",
-    price: "от 5 200 ₽",
+    price: "от 2 500 ₽",
     features: [
       "Расширенный анализ воды",
       "Осмотр оборудования",
@@ -364,7 +364,7 @@ export function ServiceFormatsSection() {
                       </tr>
                       <tr className="border-t border-border/30">
                         <td className="py-2 pr-4">Выезд для диагностики заболеваний</td>
-                        <td className="py-2 pr-4">от 5 200 ₽</td>
+                        <td className="py-2 pr-4">от 2 500 ₽</td>
                         <td className="py-2">—</td>
                       </tr>
                     </tbody>
