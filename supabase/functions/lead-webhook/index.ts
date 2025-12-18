@@ -1,5 +1,12 @@
 // Public backend function: forwards lead payload to Albato webhook without CORS issues.
 
+// NOTE: This file runs on Supabase Edge (Deno). Our frontend TS/ESLint config
+// doesn't include Deno globals, so we declare a minimal shape for type-checking.
+declare const Deno: {
+  env: { get: (key: string) => string | undefined };
+  serve: (handler: (req: Request) => Response | Promise<Response>) => void;
+};
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -24,6 +31,17 @@ function asTrimmedString(v: unknown, maxLen: number) {
 function asRecord(v: unknown): Record<string, unknown> {
   if (v && typeof v === "object") return v as Record<string, unknown>;
   return {};
+}
+
+function parseModeFromPageUrl(pageUrl: string): string {
+  try {
+    const url = new URL(pageUrl);
+    const m = url.searchParams.get("mode");
+    if (m === "installation" || m === "service") return m;
+  } catch {
+    // ignore
+  }
+  return "";
 }
 
 function getClientIp(req: Request): string {
@@ -128,15 +146,28 @@ Deno.serve(async (req) => {
     return json({ ok: true, skipped: true });
   }
 
+  const page_url = asTrimmedString(b["page_url"], 2048);
+  const mode =
+    asTrimmedString(b["mode"] ?? b["source"], 30) ||
+    parseModeFromPageUrl(page_url) ||
+    "installation";
+  const form_name =
+    asTrimmedString(b["form_name"] ?? b["form"], 60) ||
+    "site";
+  const comment = asTrimmedString(b["comment"] ?? b["message"], 1000);
+  const messenger = asTrimmedString(b["messenger"], 20) || "phone";
+
+  // Payload that we forward to Albato
   const payload = {
+    // Primary fields (our canonical schema)
     name: asTrimmedString(b["name"], 100),
     phone: asTrimmedString(b["phone"], 50),
-    comment: asTrimmedString(b["comment"], 1000),
-    messenger: asTrimmedString(b["messenger"], 20),
+    comment,
+    messenger,
 
-    mode: asTrimmedString(b["mode"], 30),
-    form_name: asTrimmedString(b["form_name"], 60),
-    page_url: asTrimmedString(b["page_url"], 2048),
+    mode,
+    form_name,
+    page_url,
 
     // UTM params (optional)
     utm_source: asTrimmedString(b["utm_source"], 100),
@@ -146,6 +177,13 @@ Deno.serve(async (req) => {
     utm_term: asTrimmedString(b["utm_term"], 150),
 
     timestamp: asTrimmedString(b["timestamp"], 40),
+
+    // Compatibility aliases (Albato users often map these)
+    message: comment,
+    form: form_name,
+    source: mode,
+    deal_name: `BioCube — ${mode} — ${form_name}`,
+    lead_name: `BioCube — ${mode} — ${form_name}`,
   };
 
   if (!payload.name || !payload.phone) {

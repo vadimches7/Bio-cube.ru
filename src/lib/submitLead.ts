@@ -1,5 +1,6 @@
 import { getUTMParams, ServiceMode } from "@/contexts/ServiceModeContext";
 import { getSupabaseClient } from "@/integrations/supabase/client";
+import { normalizeRuPhoneForCRM } from "@/lib/phone";
 
 type GTMEvent = Record<string, unknown>;
 
@@ -105,15 +106,16 @@ export async function submitLead(
   if (!formData.name.trim()) {
     return { success: false, error: "Укажите имя" };
   }
-  if (!formData.phone.trim()) {
-    return { success: false, error: "Укажите телефон" };
+  const phoneCRM = normalizeRuPhoneForCRM(formData.phone);
+  if (!phoneCRM || phoneCRM.length !== 11 || !phoneCRM.startsWith("7")) {
+    return { success: false, error: "Укажите телефон в формате +7 (___) ___-__-__" };
   }
   
   // 4. Формирование payload
   const payload = {
     // Данные формы
     name: formData.name.trim(),
-    phone: formData.phone.trim(),
+    phone: phoneCRM,
     comment: formData.comment?.trim() || "",
     messenger: formData.messenger || "phone",
     

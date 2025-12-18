@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { useServiceMode } from "@/contexts/ServiceModeContext";
 import { submitLead, FormStatus, getRateLimitRemaining } from "@/lib/submitLead";
+import { formatRuPhoneMask } from "@/lib/phone";
 import { CheckCircle2, Send, AlertCircle, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
@@ -162,10 +163,15 @@ export const ContactFormDialog = forwardRef<HTMLDivElement, ContactFormDialogPro
                   type="tel"
                   placeholder="+7 (___) ___-__-__"
                   value={formData.phone}
-                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, phone: formatRuPhoneMask(e.target.value) }))
+                  }
                   required
                   disabled={status === "loading"}
                   className="bg-muted/50 border-border/50 focus:border-bio"
+                  autoComplete="tel"
+                  inputMode="tel"
+                  maxLength={18}
                 />
               </div>
               
