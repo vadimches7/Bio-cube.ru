@@ -131,17 +131,22 @@ export function QuizSection() {
     },
   };
 
+  const promptByMode: Record<"installation" | "service", string> = {
+    installation: "Опишите пожелания к проекту (размеры, место установки, стиль, бюджет — если есть).",
+    service: "Опишите, что происходит с аквариумом (когда началось, что меняли, есть ли фото/видео).",
+  };
+
   const quizPrefillComment =
     isComplete
       ? [
-          "Итог квиза:",
+          promptByMode[mode],
+          "",
+          "Вы выбрали:",
           ...questions.map((q) => {
             const label = fieldLabelByMode[mode][q.id] ?? q.question;
             const value = getAnswerLabel(q.id);
             return `- ${label}: ${value}`;
           }),
-          "",
-          "Комментарий клиента:",
         ].join("\n")
       : undefined;
 
