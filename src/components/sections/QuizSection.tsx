@@ -110,6 +110,41 @@ export function QuizSection() {
   const isComplete = Object.keys(answers).length === questions.length;
   const currentQuestion = questions[currentStep];
 
+  // Итог квиза → в комментарий формы (уйдёт в CRM как message/comment)
+  const getAnswerLabel = (questionId: string): string => {
+    const q = questions.find((x) => x.id === questionId);
+    const raw = answers[questionId];
+    const opt = q?.options.find((o) => o.value === raw);
+    return (opt?.label ?? raw ?? "").toString();
+  };
+
+  const fieldLabelByMode: Record<"installation" | "service", Record<string, string>> = {
+    installation: {
+      type: "Тип аквариума",
+      location: "Где установка",
+      size: "Объём",
+    },
+    service: {
+      problem: "Проблема",
+      urgency: "Срочность",
+      size: "Объём",
+    },
+  };
+
+  const quizPrefillComment =
+    isComplete
+      ? [
+          "Итог квиза:",
+          ...questions.map((q) => {
+            const label = fieldLabelByMode[mode][q.id] ?? q.question;
+            const value = getAnswerLabel(q.id);
+            return `- ${label}: ${value}`;
+          }),
+          "",
+          "Комментарий клиента:",
+        ].join("\n")
+      : undefined;
+
   // Контент в зависимости от режима
   const content = {
     installation: {
@@ -265,6 +300,7 @@ export function QuizSection() {
         onOpenChange={setDialogOpen}
         ctaText={c.cta}
         formName="quiz"
+        prefillComment={quizPrefillComment}
       />
     </section>
   );
