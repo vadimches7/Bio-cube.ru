@@ -60,7 +60,7 @@ export function DirectionsPicker({
               <img
                 src={TEAM_MODAL_PHOTO_IMAGE}
                 alt="Команда Bio‑Cube"
-                className="h-28 sm:h-32 md:h-44 lg:h-52 w-full object-cover object-[50%_30%]"
+                className="h-32 sm:h-36 md:h-48 lg:h-56 w-full object-cover object-[50%_45%]"
                 loading="lazy"
                 onError={(e) => {
                   // Hide broken image icon if the file is missing; keep layout clean.
@@ -71,7 +71,7 @@ export function DirectionsPicker({
             </div>
           </div>
 
-          <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight">
             {title}
           </h2>
         </div>
