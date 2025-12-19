@@ -1,9 +1,8 @@
 import { cn } from "@/lib/utils";
 import { BioCubeLogo } from "@/components/BioCubeLogo";
 import type { DirectionConfig } from "@/lib/directions";
-import { DIRECTIONS_META_BADGES } from "@/lib/directions";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
-import { BRAND_SINCE_YEAR, TEAM_MODAL_PHOTO_IMAGE } from "@/lib/brand";
+import { TEAM_MODAL_PHOTO_IMAGE } from "@/lib/brand";
 
 type DirectionsPickerProps = {
   title: string;
@@ -56,18 +55,12 @@ export function DirectionsPicker({
         {/* Header */}
         <div className="text-center mb-6 sm:mb-10">
           <div className="flex flex-col items-center gap-3 mb-4">
-            {/* Simple logo on dark background (as in the previous version) */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 text-foreground/90 border border-white/10">
-              <BioCubeLogo className="h-5 w-5 opacity-90" />
-              <span className="text-xs font-medium tracking-[0.2em]">BIO‑CUBE</span>
-            </div>
-
-            {/* Small team photo window under the logo (modal-only) */}
-            <div className="relative w-full max-w-lg sm:max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+            {/* Team photo (stretched to the top area) */}
+            <div className="relative w-full overflow-hidden rounded-3xl border border-white/10 bg-white/5">
               <img
                 src={TEAM_MODAL_PHOTO_IMAGE}
                 alt="Команда Bio‑Cube"
-                className="h-24 sm:h-28 md:h-40 lg:h-44 w-full object-cover object-[50%_30%]"
+                className="h-28 sm:h-32 md:h-44 lg:h-52 w-full object-cover object-[50%_30%]"
                 loading="lazy"
                 onError={(e) => {
                   // Hide broken image icon if the file is missing; keep layout clean.
@@ -76,24 +69,11 @@ export function DirectionsPicker({
               />
               <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/10 to-black/45" aria-hidden="true" />
             </div>
-
-            <div className="text-xs sm:text-sm text-foreground/80">
-              Команда <span className="text-foreground font-medium">Bio‑Cube</span> — работаем с{" "}
-              <span className="text-foreground font-medium">{BRAND_SINCE_YEAR}</span> года
-            </div>
           </div>
 
-          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold mb-2">{title}</h2>
-          {subtitle && <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">{subtitle}</p>}
-
-          <div className="hidden md:flex items-center justify-center gap-3 mt-6">
-            {DIRECTIONS_META_BADGES.map((b) => (
-              <span key={b.text} className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-foreground/80">
-                <b.icon className="h-4 w-4 text-bio" />
-                {b.text}
-              </span>
-            ))}
-          </div>
+          <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
+            {title}
+          </h2>
         </div>
 
         {/* Cards (vertical stack) */}

@@ -91,8 +91,7 @@ export function ModeSelectDialog() {
       <div className="relative z-10 min-h-full flex items-start justify-center py-8 sm:py-10">
         <div className="w-full max-w-5xl mx-4 animate-scale-in">
           <DirectionsPicker
-            title="С чем мы можем Вам помочь?"
-            subtitle="Выберите направление — мы подскажем следующий шаг и аккуратно проведём к заявке."
+            title="Выберите направление"
             directions={directions}
             onPick={handlePickDirection}
             // Keep overall background dark (no team photo behind cards)
