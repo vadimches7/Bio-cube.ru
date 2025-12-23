@@ -1,104 +1,116 @@
-import { useEffect, useCallback } from "react";
-import { useServiceMode, ServiceMode } from "@/contexts/ServiceModeContext";
-import { useNavigate } from "react-router-dom";
-import { DIRECTIONS } from "@/lib/directions";
-import type { DirectionConfig } from "@/lib/directions";
-import { DirectionsPicker } from "@/components/DirectionsPicker";
+import { useEffect, useState } from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { Dialog, DialogPortal, DialogOverlay } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useServiceMode } from "@/contexts/ServiceModeContext";
+import { Droplets, Wrench } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 /**
- * ModeSelectDialog - Модальное окно выбора режима услуг
- * 
- * Показывается ВСЕГДА при открытии сайта.
- * Закрыть можно ТОЛЬКО выбором одного из режимов.
- * Без крестика, без клика по фону, без Esc.
- * 
- * Если в URL есть ?mode=, соответствующая карточка подсвечивается как "рекомендуем".
+ * Модальное окно выбора режима услуг
+ * Показывается ВСЕГДА при загрузке страницы
+ * Блокирует фон, закрыть можно только выбором режима
  */
 export function ModeSelectDialog() {
-  const { setMode, setModeSelected, isModeSelected, suggestedMode } = useServiceMode();
-  const navigate = useNavigate();
+  const { mode, setMode } = useServiceMode();
+  const [open, setOpen] = useState(true);
 
-  // Блокировка закрытия по Escape
+  // Всегда показываем модалку при загрузке
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Блокируем Escape только пока модалка открыта
-      if (!isModeSelected && e.key === "Escape") {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    };
-    
-    document.addEventListener("keydown", handleKeyDown, true);
-    return () => document.removeEventListener("keydown", handleKeyDown, true);
-  }, [isModeSelected]);
+    setOpen(true);
+  }, []);
 
-  // Блокировка скролла body пока модалка открыта
-  useEffect(() => {
-    if (!isModeSelected) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isModeSelected]);
-
-  const handleSelectMode = useCallback(
-    (mode: ServiceMode) => {
-      setMode(mode);
-      setModeSelected();
-    },
-    [setMode, setModeSelected],
-  );
-
-  const handlePickDirection = useCallback(
-    (direction: DirectionConfig) => {
-      if (direction.kind === "mode" && direction.mode) {
-        handleSelectMode(direction.mode);
-        return;
-      }
-      if (direction.kind === "route" && direction.href) {
-        setModeSelected();
-        navigate(direction.href);
-      }
-    },
-    [handleSelectMode, navigate, setModeSelected],
-  );
-
-  // Если режим уже выбран, ничего не рендерим
-  if (isModeSelected) return null;
-
-  const directions = DIRECTIONS.map((d) => ({
-    ...d,
-    // Default “recommended” is defined in config; additionally, if URL suggests a mode,
-    // we can highlight it ONLY when config doesn't already mark something as recommended.
-    isRecommended:
-      d.isRecommended ??
-      (DIRECTIONS.every((x) => !x.isRecommended) && d.kind === "mode" && d.mode === suggestedMode),
-  }));
+  const handleModeSelect = (selectedMode: "installation" | "service") => {
+    setMode(selectedMode);
+    setOpen(false);
+  };
 
   return (
-    <div role="dialog" aria-modal="true" aria-labelledby="mode-select-title" className="fixed inset-0 z-[100] overflow-y-auto">
-      {/* Overlay - блокирует фон, нет клика для закрытия */}
-      <div className="fixed inset-0 bg-black/85 backdrop-blur-md" />
-      
-      {/* Декоративные свечения на фоне */}
-      <div className="fixed top-1/3 left-1/4 w-96 h-96 bg-bio/10 rounded-full blur-[100px] animate-float" />
-      <div className="fixed bottom-1/3 right-1/4 w-80 h-80 bg-amber/10 rounded-full blur-[100px] animate-float delay-2" />
-      
-      {/* Контент модалки */}
-      <div className="relative z-10 min-h-full flex items-start justify-center py-8 sm:py-10">
-        <div className="w-full max-w-5xl mx-4 animate-scale-in">
-          <DirectionsPicker
-            title="Выберите направление"
-            directions={directions}
-            onPick={handlePickDirection}
-            // Keep overall background dark (no team photo behind cards)
-            backgroundImageSrc={undefined}
-          />
-        </div>
-      </div>
-    </div>
+    <Dialog open={open} onOpenChange={() => {}}>
+      <DialogPortal>
+        {/* Overlay с блокировкой фона */}
+        <DialogOverlay 
+          className="bg-black/90 backdrop-blur-sm z-[100]"
+          onClick={(e) => e.preventDefault()} // Блокируем клик по фону
+        />
+        
+        {/* Кастомный DialogContent без кнопки закрытия и с блокировкой */}
+        <DialogPrimitive.Content
+          className={cn(
+            "fixed left-[50%] top-[50%] z-[101] grid w-full max-w-md translate-x-[-50%] translate-y-[-50%] gap-4 border border-border/50 bg-gradient-card backdrop-blur-xl p-6 shadow-xl duration-200",
+            "data-[state=open]:animate-in data-[state=closed]:animate-out",
+            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+            "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+            "data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
+            "data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
+            "sm:rounded-lg"
+          )}
+          onInteractOutside={(e) => e.preventDefault()} // Блокируем закрытие при клике вне
+          onEscapeKeyDown={(e) => e.preventDefault()} // Блокируем закрытие по ESC
+        >
+          {/* Заголовок */}
+          <div className="text-center space-y-2 mb-6 relative z-10">
+            <h2 className="text-2xl font-serif font-bold text-foreground">
+              Что вам нужно?
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Выберите режим работы с нами
+            </p>
+          </div>
+
+          {/* Кнопки выбора режима */}
+          <div className="space-y-3 relative z-10">
+            {/* Установка под ключ */}
+            <Button
+              onClick={() => handleModeSelect("installation")}
+              variant="bio"
+              size="lg"
+              className={cn(
+                "w-full h-auto py-6 px-6 flex flex-col items-center gap-3",
+                "bg-gradient-bio hover:scale-105 transition-all duration-300",
+                "hover:shadow-[0_0_40px_hsl(145_60%_45%/0.4)]",
+                "border-2 border-transparent hover:border-bio/50"
+              )}
+            >
+              <div className="flex items-center gap-3">
+                <Droplets className="w-6 h-6" />
+                <span className="text-lg font-semibold">Установка под ключ</span>
+              </div>
+              <p className="text-sm opacity-90 text-left w-full">
+                Проектируем, изготавливаем и запускаем экосистему под вашу архитектуру
+              </p>
+            </Button>
+
+            {/* Обслуживание / спасение */}
+            <Button
+              onClick={() => handleModeSelect("service")}
+              variant="amber"
+              size="lg"
+              className={cn(
+                "w-full h-auto py-6 px-6 flex flex-col items-center gap-3",
+                "bg-gradient-amber hover:scale-105 transition-all duration-300",
+                "hover:shadow-[0_0_40px_hsl(38_90%_55%/0.4)]",
+                "border-2 border-transparent hover:border-amber/50"
+              )}
+            >
+              <div className="flex items-center gap-3">
+                <Wrench className="w-6 h-6" />
+                <span className="text-lg font-semibold">Обслуживание / спасение</span>
+              </div>
+              <p className="text-sm opacity-90 text-left w-full">
+                Спасём аквариум и вернём прозрачную воду без грязи
+              </p>
+            </Button>
+          </div>
+
+          {/* Декоративные элементы */}
+          <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden rounded-lg">
+            <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-bio/5 rounded-full blur-3xl animate-float" />
+            <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-amber/5 rounded-full blur-3xl animate-float delay-2" />
+          </div>
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    </Dialog>
   );
 }
+
