@@ -136,25 +136,12 @@ export function HeroSection() {
           "border border-white/10",
           "rounded-[40px]",
           "shadow-[0_0_50px_rgba(0,0,0,0.5),0_0_60px_-10px_rgba(20,184,166,0.15)]",
-          "animate-fade-up",
-          "overflow-visible"
+          "animate-fade-up"
         )}>
-          {/* Рыбка петушок - крупная, выплывает из-за правого края карточки */}
-          <div className="absolute -right-[15%] md:-right-[10%] top-1/2 -translate-y-1/2 z-20 pointer-events-none hidden lg:block">
-            <img 
-              src="https://images.squarespace-cdn.com/content/v1/530e39cbe4b0676451000f72/1429813291845-O3L58525TVSXF5O0AFT2/betta+fish.png"
-              alt="Betta Fish"
-              className="h-[33vh] w-auto object-contain opacity-80 mix-blend-screen animate-float"
-              style={{
-                filter: 'drop-shadow(0 0 30px rgba(34,211,238,0.4))',
-                maxHeight: '300px'
-              }}
-            />
-          </div>
           {/* Блик сверху */}
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-teal-400/50 to-transparent opacity-70 z-10" />
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-teal-400/50 to-transparent opacity-70" />
 
-          <div className="p-8 md:p-12 space-y-10 relative z-10">
+          <div className="p-8 md:p-12 space-y-10">
             {/* 3. Логотип и Бренд */}
             <div className="flex items-center gap-4 opacity-90">
                <BioCubeLogo className="w-12 h-12 drop-shadow-[0_0_15px_rgba(45,212,191,0.5)]" />
@@ -214,7 +201,7 @@ export function HeroSection() {
           </div>
 
           {/* 5. Футер карты (Статистика) */}
-          <div className="relative border-t-0 p-8 md:px-12 md:py-8 bg-white/5 backdrop-blur-sm z-10">
+          <div className="relative border-t-0 p-8 md:px-12 md:py-8 bg-white/5 backdrop-blur-sm">
              {/* Градиентный разделитель */}
              <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
              
