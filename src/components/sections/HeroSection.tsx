@@ -91,9 +91,9 @@ export function HeroSection() {
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#020617] font-sans">
       {/* 1. Фон: Ярче + Каустика + Виньетка */}
       <div className="absolute inset-0 z-0">
-        {/* Основное изображение - осветлённое */}
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=2574&auto=format&fit=crop')] bg-cover bg-center grayscale opacity-40" />
-        <div className="absolute inset-0 bg-black/70" />
+        {/* Основное изображение - черно-белое и приглушенное */}
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1546026423-cc4642628d2b?q=80&w=2574&auto=format&fit=crop')] bg-cover bg-center opacity-30" style={{ filter: 'grayscale(100%)' }} />
+        <div className="absolute inset-0 bg-black/75" />
         
         {/* Каустика - световые лучи сверху (как солнце через воду) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -116,6 +116,9 @@ export function HeroSection() {
           />
         </div>
         
+        {/* Световые лучи (Caustics) - падающие сверху */}
+        <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/20 via-transparent to-transparent pointer-events-none" />
+        
         {/* Градиент снизу + Виньетка */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.85)_100%)] pointer-events-none" />
@@ -123,22 +126,35 @@ export function HeroSection() {
         {/* Мягкое свечение сверху */}
         <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[80vw] h-[50vh] bg-teal-400/15 blur-[120px] rounded-full opacity-50 pointer-events-none" />
       </div>
-
+      
       <div className="container relative z-10 px-4 pt-10 pb-12 flex justify-center">
         {/* 2. Центральная карта - эффект мутного стекла (Glass OS) */}
         <div className={cn(
-          "relative w-full max-w-[500px] overflow-hidden",
+          "relative w-full max-w-[500px]",
           // Эффект мутного стекла как в macOS/iOS
           "bg-white/5 backdrop-blur-2xl",
           "border border-white/10",
           "rounded-[40px]",
           "shadow-[0_0_50px_rgba(0,0,0,0.5),0_0_60px_-10px_rgba(20,184,166,0.15)]",
-          "animate-fade-up"
+          "animate-fade-up",
+          "overflow-visible"
         )}>
+          {/* Рыбка петушок - крупная, выплывает из-за правого края карточки */}
+          <div className="absolute -right-[15%] md:-right-[10%] top-1/2 -translate-y-1/2 z-20 pointer-events-none hidden lg:block">
+            <img 
+              src="https://images.squarespace-cdn.com/content/v1/530e39cbe4b0676451000f72/1429813291845-O3L58525TVSXF5O0AFT2/betta+fish.png"
+              alt="Betta Fish"
+              className="h-[33vh] w-auto object-contain opacity-80 mix-blend-screen animate-float"
+              style={{
+                filter: 'drop-shadow(0 0 30px rgba(34,211,238,0.4))',
+                maxHeight: '300px'
+              }}
+            />
+          </div>
           {/* Блик сверху */}
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-teal-400/50 to-transparent opacity-70" />
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-teal-400/50 to-transparent opacity-70 z-10" />
 
-          <div className="p-8 md:p-12 space-y-10">
+          <div className="p-8 md:p-12 space-y-10 relative z-10">
             {/* 3. Логотип и Бренд */}
             <div className="flex items-center gap-4 opacity-90">
                <BioCubeLogo className="w-12 h-12 drop-shadow-[0_0_15px_rgba(45,212,191,0.5)]" />
@@ -173,13 +189,13 @@ export function HeroSection() {
               <button 
                 onClick={handlePrimaryCta}
                 className={cn(
-                  "relative group w-full overflow-hidden px-6 py-4 rounded-full font-bold tracking-wide transition-all duration-300 font-sans",
+                  "relative group w-full overflow-hidden px-6 py-6 rounded-full transition-all duration-300 font-sans",
                   "bg-gradient-to-r from-cyan-500 to-teal-400 text-white",
                   "shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:shadow-[0_0_50px_rgba(34,211,238,0.6)]",
                   "hover:scale-[1.01] active:scale-[0.99]"
                 )}
               >
-                <span className="relative z-10">{c.primaryCta}</span>
+                <span className="relative z-10 font-bold tracking-wide">{c.primaryCta}</span>
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
               </button>
 
@@ -198,18 +214,18 @@ export function HeroSection() {
           </div>
 
           {/* 5. Футер карты (Статистика) */}
-          <div className="relative border-t-0 p-8 md:px-12 md:py-8 bg-white/5 backdrop-blur-sm">
+          <div className="relative border-t-0 p-8 md:px-12 md:py-8 bg-white/5 backdrop-blur-sm z-10">
              {/* Градиентный разделитель */}
              <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
              
             <div className="grid grid-cols-3 gap-4 text-center md:text-left">
               {c.stats.map((stat, i) => (
                 <div key={i} className="flex flex-col gap-1">
-                  <div className="text-2xl md:text-3xl font-bold font-sans text-white drop-shadow-md">
+                  <div className="text-2xl md:text-3xl font-bold font-sans text-[#22d3ee] drop-shadow-[0_0_15px_rgba(34,211,238,0.3)]">
                     {stat.value}
                   </div>
-                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] font-sans">
-                    {stat.label}
+                  <div className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.3em] font-sans">
+                    {stat.label.toUpperCase()}
                   </div>
                 </div>
               ))}
