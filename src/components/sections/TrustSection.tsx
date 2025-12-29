@@ -45,9 +45,9 @@ const logosData = {
 export function TrustSection() {
   const { mode } = useServiceMode();
   
-  const stats = statsData[mode];
-  const logos = logosData[mode];
-  const whoWeWorkWithTitle = mode === "installation" ? "Нам доверяют" : "Работаем с";
+  const stats = statsData[mode] || statsData.installation;
+  const logos = logosData[mode] || logosData.installation;
+  const whoWeWorkWithTitle = mode === "installation" || mode === "decoration" ? "Нам доверяют" : "Работаем с";
 
   return (
     <section className="section-padding relative overflow-hidden">

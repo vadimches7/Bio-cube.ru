@@ -65,11 +65,11 @@ export const CasesSection = forwardRef<HTMLElement, object>((_, ref) => {
   const { mode } = useServiceMode();
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   
-  const cases: CaseItem[] = mode === "installation" ? installationCases : serviceCases;
-  const title = mode === "installation" ? "Наши проекты" : "Кейсы спасения";
-  const subtitle = mode === "installation" 
-    ? "Каждый аквариум — уникальный проект под архитектуру и пожелания заказчика"
-    : "Реальные истории спасения аквариумов наших клиентов";
+  const cases: CaseItem[] = mode === "service" ? serviceCases : installationCases;
+  const title = mode === "service" ? "Кейсы спасения" : "Наши проекты";
+  const subtitle = mode === "service" 
+    ? "Реальные истории спасения аквариумов наших клиентов"
+    : "Каждый аквариум — уникальный проект под архитектуру и пожелания заказчика";
 
   const gridClass =
     cases.length === 1
@@ -140,7 +140,7 @@ export const CasesSection = forwardRef<HTMLElement, object>((_, ref) => {
                   {item.title}
                 </h3>
                 
-                {mode === "installation" ? (
+                {mode === "installation" || mode === "decoration" ? (
                   <>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
                       <span>{(item as InstallationCase).location}</span>
@@ -173,7 +173,7 @@ export const CasesSection = forwardRef<HTMLElement, object>((_, ref) => {
         </div>
         
         {/* CTA */}
-        {mode === "installation" ? (
+        {mode === "installation" || mode === "decoration" ? (
           <div className="text-center mt-12">
             <Button variant="outline-bio" size="lg">
               Смотреть все проекты

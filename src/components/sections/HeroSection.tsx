@@ -32,9 +32,17 @@ export function HeroSection() {
       primaryCta: "Вызвать специалиста",
       secondaryCta: "Что делаем за визит",
     },
+    decoration: {
+      tagline: "ДИЗАЙН И СТИЛЬ",
+      title: "Декорирование и",
+      titleAccent: "художественные композиции",
+      subtitle: "Создаем уникальные подводные ландшафты. Стили, хардскейп, подбор декораций под ваш интерьер.",
+      primaryCta: "Смотреть декоры",
+      secondaryCta: "Наши работы",
+    },
   };
 
-  const c = content[mode];
+  const c = content[mode] || content.installation;
 
   const handlePrimaryCta = () => {
     setDialogCta(c.primaryCta);

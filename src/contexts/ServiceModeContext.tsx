@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 // Тип режима услуг
-export type ServiceMode = "installation" | "service";
+export type ServiceMode = "installation" | "service" | "decoration";
 
 // Интерфейс контекста
 interface ServiceModeContextType {
@@ -18,7 +18,7 @@ const ServiceModeContext = createContext<ServiceModeContextType | undefined>(und
 function getModeFromURL(): ServiceMode {
   const params = new URLSearchParams(window.location.search);
   const urlMode = params.get("mode");
-  if (urlMode === "installation" || urlMode === "service") {
+  if (urlMode === "installation" || urlMode === "service" || urlMode === "decoration") {
     return urlMode;
   }
   return "installation"; // По умолчанию
