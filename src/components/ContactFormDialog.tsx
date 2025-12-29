@@ -1,5 +1,4 @@
 import { forwardRef, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -107,26 +106,29 @@ export const ContactFormDialog = forwardRef<HTMLDivElement, ContactFormDialogPro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-card border-border/50 backdrop-blur-xl">
+      <DialogContent className={cn(
+        "sm:max-w-md",
+        // Glass OS стиль как в HeroSection
+        "bg-white/5 backdrop-blur-2xl border-white/10",
+        "rounded-[40px]",
+        "shadow-[0_0_50px_rgba(0,0,0,0.5),0_0_60px_-10px_rgba(20,184,166,0.15)]",
+        "font-sans",
+        // Кастомная кнопка закрытия в стиле Glass OS
+        "[&>button]:text-slate-400 [&>button]:hover:text-white [&>button]:hover:bg-white/10 [&>button]:rounded-full [&>button]:w-8 [&>button]:h-8 [&>button]:transition-all"
+      )}>
         {status === "success" ? (
           <div className="flex flex-col items-center justify-center py-8 text-center animate-scale-in">
-            <div className={cn(
-              "w-16 h-16 rounded-full flex items-center justify-center mb-4",
-              mode === "installation" ? "bg-bio/20" : "bg-amber/20"
-            )}>
-              <CheckCircle2 className={cn(
-                "w-8 h-8",
-                mode === "installation" ? "text-bio" : "text-amber"
-              )} />
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-teal-500/20">
+              <CheckCircle2 className="w-8 h-8 text-teal-400" />
             </div>
-            <h3 className="text-xl font-serif font-semibold mb-2">Заявка отправлена!</h3>
-            <p className="text-muted-foreground">Мы свяжемся с вами в ближайшее время</p>
+            <h3 className="text-xl font-sans font-bold mb-2 text-white">Заявка отправлена!</h3>
+            <p className="text-slate-300 text-sm">Мы свяжемся с вами в ближайшее время</p>
           </div>
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle className="font-serif text-2xl">{ctaText || title}</DialogTitle>
-              <DialogDescription className="text-muted-foreground">
+              <DialogTitle className="!font-sans text-2xl font-bold text-white">{ctaText || title}</DialogTitle>
+              <DialogDescription className="text-slate-300 text-sm mt-2">
                 {description}
               </DialogDescription>
             </DialogHeader>
@@ -144,7 +146,7 @@ export const ContactFormDialog = forwardRef<HTMLDivElement, ContactFormDialogPro
               />
               
               <div className="space-y-2">
-                <Label htmlFor="name">Ваше имя</Label>
+                <Label htmlFor="name" className="text-slate-200 text-sm font-medium">Ваше имя</Label>
                 <Input
                   id="name"
                   placeholder="Как к вам обращаться?"
@@ -152,12 +154,16 @@ export const ContactFormDialog = forwardRef<HTMLDivElement, ContactFormDialogPro
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                   required
                   disabled={status === "loading"}
-                  className="bg-muted/50 border-border/50 focus:border-bio"
+                  className={cn(
+                    "!font-sans bg-white/5 border-white/10 text-white placeholder:text-slate-400",
+                    "focus-visible:border-cyan-400 focus-visible:ring-cyan-400/50 focus-visible:ring-2",
+                    "transition-all duration-200"
+                  )}
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="phone">Телефон</Label>
+                <Label htmlFor="phone" className="text-slate-200 text-sm font-medium">Телефон</Label>
                 <Input
                   id="phone"
                   type="tel"
@@ -168,7 +174,11 @@ export const ContactFormDialog = forwardRef<HTMLDivElement, ContactFormDialogPro
                   }
                   required
                   disabled={status === "loading"}
-                  className="bg-muted/50 border-border/50 focus:border-bio"
+                  className={cn(
+                    "!font-sans bg-white/5 border-white/10 text-white placeholder:text-slate-400",
+                    "focus-visible:border-cyan-400 focus-visible:ring-cyan-400/50 focus-visible:ring-2",
+                    "transition-all duration-200"
+                  )}
                   autoComplete="tel"
                   inputMode="tel"
                   maxLength={18}
@@ -177,7 +187,7 @@ export const ContactFormDialog = forwardRef<HTMLDivElement, ContactFormDialogPro
               
               {/* Комментарий - для режима service особенно важен */}
               <div className="space-y-2">
-                <Label htmlFor="comment">
+                <Label htmlFor="comment" className="text-slate-200 text-sm font-medium">
                   {mode === "service" ? "Опишите проблему" : "Комментарий (необязательно)"}
                 </Label>
                 <Textarea
@@ -189,13 +199,17 @@ export const ContactFormDialog = forwardRef<HTMLDivElement, ContactFormDialogPro
                   value={formData.comment}
                   onChange={(e) => setFormData(prev => ({ ...prev, comment: e.target.value }))}
                   disabled={status === "loading"}
-                  className="bg-muted/50 border-border/50 focus:border-bio min-h-[80px]"
+                  className={cn(
+                    "!font-sans bg-white/5 border-white/10 text-white placeholder:text-slate-400 min-h-[80px]",
+                    "focus-visible:border-cyan-400 focus-visible:ring-cyan-400/50 focus-visible:ring-2",
+                    "transition-all duration-200"
+                  )}
                 />
               </div>
               
               {/* Выбор мессенджера */}
               <div className="space-y-2">
-                <Label>Удобный способ связи</Label>
+                <Label className="text-slate-200 text-sm font-medium">Удобный способ связи</Label>
                 <div className="flex gap-2">
                   {[
                     { value: "phone", label: "Звонок", icon: null },
@@ -211,12 +225,11 @@ export const ContactFormDialog = forwardRef<HTMLDivElement, ContactFormDialogPro
                       }))}
                       disabled={status === "loading"}
                       className={cn(
-                        "flex-1 py-2 px-3 rounded-lg border text-sm font-medium transition-all",
+                        "flex-1 py-2.5 px-4 rounded-full text-sm font-semibold transition-all duration-200",
+                        "!font-sans",
                         formData.messenger === option.value
-                          ? mode === "installation"
-                            ? "border-bio bg-bio/10 text-bio"
-                            : "border-amber bg-amber/10 text-amber"
-                          : "border-border/50 text-muted-foreground hover:border-border"
+                          ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-[0_0_25px_rgba(34,211,238,0.4)]"
+                          : "bg-white/5 border border-white/20 text-slate-300 hover:border-white/40 hover:text-white"
                       )}
                     >
                       {option.label}
@@ -227,20 +240,24 @@ export const ContactFormDialog = forwardRef<HTMLDivElement, ContactFormDialogPro
               
               {/* Сообщение об ошибке */}
               {status === "error" && errorMessage && (
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm !font-sans">
                   <AlertCircle className="w-4 h-4 flex-shrink-0" />
                   {errorMessage}
                 </div>
               )}
               
-              <Button 
+              <button 
                 type="submit" 
-                variant={mode === "installation" ? "bio" : "amber"}
-                size="lg"
-                className="w-full"
                 disabled={status === "loading"}
+                className={cn(
+                  "relative group w-full overflow-hidden px-6 py-4 rounded-full font-bold tracking-wide transition-all duration-300",
+                  "!font-sans bg-gradient-to-r from-teal-500 to-cyan-500 text-white",
+                  "shadow-[0_0_25px_rgba(20,184,166,0.4)] hover:shadow-[0_0_40px_rgba(20,184,166,0.6)]",
+                  "hover:scale-[1.02] active:scale-[0.98]",
+                  "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                )}
               >
-                <span className="flex items-center gap-2">
+                <span className="relative z-10 flex items-center justify-center gap-2">
                   {status === "loading" ? (
                     <>
                       <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -253,11 +270,12 @@ export const ContactFormDialog = forwardRef<HTMLDivElement, ContactFormDialogPro
                     </>
                   )}
                 </span>
-              </Button>
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+              </button>
               
-              <p className="text-xs text-muted-foreground text-center">
+              <p className="text-xs text-slate-400 text-center !font-sans">
                 Нажимая кнопку, вы соглашаетесь с{" "}
-                <Link to="/privacy" className="underline hover:text-foreground">политикой конфиденциальности</Link>
+                <Link to="/privacy" className="underline hover:text-cyan-400 text-slate-300">политикой конфиденциальности</Link>
               </p>
             </form>
           </>

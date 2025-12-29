@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { ServiceModeProvider } from "@/contexts/ServiceModeContext";
 import { HeroSection } from "@/components/sections/HeroSection";
+import { ServicesSection } from "@/components/sections/ServicesSection";
 import { TrustSection } from "@/components/sections/TrustSection";
 import { QuizSection } from "@/components/sections/QuizSection";
 import { CasesSection } from "@/components/sections/CasesSection";
@@ -10,30 +12,38 @@ import { TeamSection } from "@/components/sections/TeamSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
 import { Footer } from "@/components/Footer";
-import { ModeSelectDialog } from "@/components/ModeSelectDialog";
+import { VideoIntro } from "@/components/VideoIntro";
 import { FloatingModeSwitch } from "@/components/FloatingModeSwitch";
 
 const Index = () => {
+  const [showContent, setShowContent] = useState(false);
+
   return (
     <ServiceModeProvider>
       <main className="min-h-screen bg-background">
-        {/* Модальное окно выбора режима - показывается всегда при загрузке */}
-        <ModeSelectDialog />
+        {/* Видео-заставка с петушком и логотипом */}
+        <VideoIntro onComplete={() => setShowContent(true)} />
         
-        {/* Плавающий переключатель режима справа */}
-        <FloatingModeSwitch />
-        
-        <HeroSection />
-        <TrustSection />
-        <QuizSection />
-        <CasesSection />
-        <BeforeAfterSection />
-        <ProcessSection />
-        <GuaranteesSection />
-        <TeamSection />
-        <FAQSection />
-        <FinalCTASection />
-        <Footer />
+        {/* Основной контент - скрыт пока показывается видео */}
+        {showContent && (
+          <div className="transition-opacity duration-500 opacity-100">
+            {/* Плавающий переключатель режима справа */}
+            <FloatingModeSwitch />
+            
+            <HeroSection />
+            <ServicesSection />
+            <TrustSection />
+            <QuizSection />
+            <CasesSection />
+            <BeforeAfterSection />
+            <ProcessSection />
+            <GuaranteesSection />
+            <TeamSection />
+            <FAQSection />
+            <FinalCTASection />
+            <Footer />
+          </div>
+        )}
       </main>
     </ServiceModeProvider>
   );
