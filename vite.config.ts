@@ -11,6 +11,12 @@ export default defineConfig(({ mode }) => ({
     open: true,
   },
   build: {
+    // Make the production bundle more compatible with older browsers/WebViews (esp. Safari)
+    // without adding extra dependencies.
+    target: "es2017",
+    modulePreload: {
+      polyfill: true,
+    },
     rollupOptions: {
       output: {
         manualChunks: {
@@ -52,6 +58,9 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
+  },
+  esbuild: {
+    target: "es2017",
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
