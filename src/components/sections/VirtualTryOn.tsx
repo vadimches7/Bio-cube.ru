@@ -53,7 +53,7 @@ export function VirtualTryOn() {
               <div className="flex items-start gap-3">
                 <div className="w-2 h-2 rounded-full bg-[#4DB6AC] mt-2 flex-shrink-0" />
                 <p className="text-sm text-gray-600">
-                  Наша нейросеть автоматически рассчитает освещение и тени для идеальной вписки в интерьер
+                  Наши дизайнеры подберут освещение и композицию для идеальной вписки в интерьер
                 </p>
               </div>
               <div className="flex items-start gap-3">
@@ -79,7 +79,7 @@ export function VirtualTryOn() {
             >
               {/* After Image (BioCube installed) */}
               <div className="absolute inset-0">
-                <img src="/room-after.jpg" alt="С BioCube" className="w-full h-full object-cover" />
+                <img src="/images/solutions/room-after.jpg" alt="С BioCube" className="w-full h-full object-cover" />
                 <div className="absolute top-4 right-4 px-4 py-2 bg-[#4DB6AC]/90 backdrop-blur-sm rounded-full text-white text-sm font-medium shadow-lg">
                   Стало
                 </div>
@@ -90,7 +90,7 @@ export function VirtualTryOn() {
                 className="absolute inset-0 overflow-hidden"
                 style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
               >
-                <img src="/room-before.jpg" alt="Без BioCube" className="w-full h-full object-cover" />
+                <img src="/images/solutions/room-before.jpg" alt="Без BioCube" className="w-full h-full object-cover" />
                 <div className="absolute top-4 left-4 px-4 py-2 bg-gray-500/90 backdrop-blur-sm rounded-full text-white text-sm font-medium shadow-lg">
                   Было
                 </div>
@@ -110,8 +110,8 @@ export function VirtualTryOn() {
             {/* Caption below slider */}
             <div className="mt-6 p-4 bg-gradient-to-r from-[#4DB6AC]/10 to-[#26A69A]/10 rounded-xl border border-[#4DB6AC]/20">
               <p className="text-sm text-gray-700 text-center leading-relaxed">
-                <span className="font-medium text-[#4DB6AC]">AI-расчёт освещения:</span> Нейросеть автоматически
-                рассчитывает реалистичное распределение света, тени и блики для идеальной интеграции в ваш интерьер
+                <span className="font-medium text-[#4DB6AC]">Профессиональный дизайн:</span> Наши специалисты 
+                рассчитывают реалистичное распределение света и композицию для идеальной интеграции в ваш интерьер
               </p>
             </div>
           </div>

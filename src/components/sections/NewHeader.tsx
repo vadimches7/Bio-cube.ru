@@ -26,7 +26,7 @@ export function NewHeader() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center">
           <img
-            src="/biocube-logo.png"
+            src="/images/brand/biocube-logo.png"
             alt="BioCube логотип"
             className="h-[36px] sm:h-[44px] w-auto object-contain"
           />

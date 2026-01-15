@@ -20,14 +20,14 @@ export function NewFooter() {
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center gap-2.5 mb-4">
               <img
-                src="/biocube-logo.png"
+                src="/images/brand/biocube-logo.png"
                 alt="BioCube логотип"
                 className="w-9 h-9 object-contain"
               />
               <span className="text-lg font-semibold tracking-tight text-foreground">BioCube</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Персональные экосистемы для здоровья и благополучия под управлением ИИ.
+              Персональные экосистемы для здоровья и благополучия. Умные технологии + профессиональный сервис.
             </p>
           </div>
 

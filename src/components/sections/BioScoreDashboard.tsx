@@ -3,7 +3,7 @@ import { Activity, Droplet, Sun } from "lucide-react";
 
 export function BioScoreDashboard() {
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-16 md:py-24 bg-gradient-to-b from-white via-slate-50 to-gray-50">
       <div className="max-w-7xl mx-auto px-6">
         <Card className="relative overflow-hidden backdrop-blur-2xl bg-card/80 border-border/50 shadow-2xl shadow-[#4DB6AC]/5 rounded-3xl">
           <div className="absolute inset-0 bg-gradient-to-br from-[#4DB6AC]/5 via-transparent to-[#26A69A]/5 pointer-events-none" />

@@ -1,213 +1,213 @@
-import { useState } from "react";
-import { Lightbulb, Filter, Activity, Phone } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Activity, Droplets, Thermometer, Wifi, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface TechSpec {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  position: { top: string; left: string };
-}
-
 export function IntelligentCore() {
-  const [activeSpec, setActiveSpec] = useState<string | null>(null);
+  const [phValue, setPhValue] = useState(7.2);
+  const [tempValue, setTempValue] = useState(26);
 
-  const techSpecs: TechSpec[] = [
-    {
-      id: "light",
-      title: "Циркадное освещение",
-      description:
-        "Автоматическая адаптация спектра света под естественные ритмы. Имитация рассвета и заката для стабилизации биоритмов.",
-      icon: <Lightbulb className="w-5 h-5" />,
-      position: { top: "25%", left: "50%" },
-    },
-    {
-      id: "filter",
-      title: "Бесшумная фильтрация",
-      description: "Уровень шума < 25 дБ. Многоступенчатая система очистки с биологическим балансом.",
-      icon: <Filter className="w-5 h-5" />,
-      position: { top: "60%", left: "30%" },
-    },
-    {
-      id: "sensors",
-      title: "Мониторинг 24/7",
-      description:
-        "Непрерывный контроль pH, температуры, жесткости воды. Предиктивная аналитика для предотвращения сбоев.",
-      icon: <Activity className="w-5 h-5" />,
-      position: { top: "60%", left: "70%" },
-    },
+  // Animate values slightly
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPhValue(7.2 + (Math.random() - 0.5) * 0.1);
+      setTempValue(26 + (Math.random() - 0.5) * 0.5);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const features = [
+    "IoT-сенсоры: pH, температура, жёсткость в реальном времени",
+    "Push-уведомления вам и нашим биологам",
+    "История параметров и аналитика",
+    "Профессиональное сервисное обслуживание",
   ];
 
   return (
-    <section className="py-24 px-4 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-5xl font-light text-gray-900 mb-4 text-balance">Интеллектуальное ядро BioCube</h2>
-          <p className="text-lg text-gray-600 text-pretty">Технология на службе живой природы</p>
-        </div>
+    <section className="py-24 px-4 bg-gradient-to-b from-[#0a0f0f] via-[#0d1212] to-[#0a0f0f] relative overflow-hidden">
+      {/* Ambient background glow */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#4DB6AC]/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[#2DD4BF]/10 rounded-full blur-[120px]" />
+      </div>
 
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left: X-Ray Technical View */}
-          <div className="relative">
-            <div className="relative aspect-[4/3] bg-gradient-to-br from-gray-50 to-white rounded-3xl border border-gray-200 shadow-xl overflow-hidden">
-              {/* X-Ray Aquarium Illustration */}
-              <div className="absolute inset-0 p-8">
-                {/* Main tank outline */}
-                <div className="relative w-full h-full border-2 border-[#4DB6AC]/40 rounded-2xl backdrop-blur-sm bg-gradient-to-b from-[#4DB6AC]/5 to-blue-50/50">
-                  {/* Water level indicator */}
-                  <div className="absolute inset-x-4 top-8 h-1 bg-gradient-to-r from-transparent via-[#4DB6AC] to-transparent opacity-60" />
+          {/* Left: iPhone with Neon Glow */}
+          <div className="relative flex justify-center">
+            {/* Phone glow effect */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-[320px] h-[600px] bg-[#4DB6AC]/20 rounded-[60px] blur-[60px]" />
+            </div>
 
-                  {/* Tech points with pulsing animation */}
-                  {techSpecs.map((spec) => (
-                    <button
-                      key={spec.id}
-                      onClick={() => setActiveSpec(activeSpec === spec.id ? null : spec.id)}
-                      className="absolute group"
-                      style={{ top: spec.position.top, left: spec.position.left, transform: "translate(-50%, -50%)" }}
-                    >
-                      {/* Pulsing ring */}
-                      <div className="absolute inset-0 w-12 h-12 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
-                        <div className="absolute inset-0 bg-[#4DB6AC] rounded-full opacity-20 animate-ping" />
-                        <div className="absolute inset-0 bg-[#4DB6AC] rounded-full opacity-40 animate-pulse" />
+            {/* iPhone frame with neon border */}
+            <div
+              className="relative w-[280px] rounded-[45px] p-[2px]"
+              style={{
+                background: "linear-gradient(135deg, #4DB6AC 0%, #0d1212 40%, #0d1212 60%, #2DD4BF 100%)",
+                boxShadow: "0 0 40px rgba(77, 182, 172, 0.3), 0 0 80px rgba(77, 182, 172, 0.1)",
+              }}
+            >
+              <div className="bg-[#0d1212] rounded-[43px] p-4">
+                {/* Screen */}
+                <div className="bg-gradient-to-b from-[#111818] to-[#0d1212] rounded-[35px] overflow-hidden">
+                  <div className="p-6">
+                    {/* Status bar */}
+                    <div className="flex justify-between items-center mb-6">
+                      <span className="text-gray-400 text-xs font-medium">BioCube OS</span>
+                      <div className="flex items-center gap-1">
+                        <div className="w-2 h-2 rounded-full bg-[#4DB6AC] animate-pulse" />
+                        <span className="text-[#4DB6AC] text-xs">Online</span>
                       </div>
+                    </div>
 
-                      {/* Icon dot */}
-                      <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-[#4DB6AC] to-[#26A69A] flex items-center justify-center text-white shadow-lg shadow-[#4DB6AC]/50 transition-transform hover:scale-110">
-                        {spec.icon}
-                      </div>
+                    {/* Aquarium name */}
+                    <div className="mb-6">
+                      <h3 className="text-white text-lg font-medium">Панорама 100L</h3>
+                    </div>
 
-                      {/* Popup card */}
-                      {activeSpec === spec.id && (
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-72 bg-white/95 backdrop-blur-xl border border-gray-200 rounded-2xl p-4 shadow-2xl z-10 animate-fade-up">
-                          <div className="flex items-start gap-3 mb-2">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4DB6AC] to-[#26A69A] flex items-center justify-center text-white flex-shrink-0">
-                              {spec.icon}
-                            </div>
-                            <h3 className="font-semibold text-gray-900 text-sm">{spec.title}</h3>
-                          </div>
-                          <p className="text-xs text-gray-600 leading-relaxed">{spec.description}</p>
+                    {/* Parameter cards with glow */}
+                    <div className="grid grid-cols-2 gap-3 mb-6">
+                      {/* pH Card */}
+                      <div
+                        className="bg-[#1a2222] rounded-2xl p-4 border border-[#4DB6AC]/20"
+                        style={{
+                          boxShadow: "0 0 20px rgba(77, 182, 172, 0.1), inset 0 1px 0 rgba(77, 182, 172, 0.1)",
+                        }}
+                      >
+                        <div className="text-gray-400 text-xs mb-2">pH</div>
+                        <div className="text-[#4DB6AC] text-2xl font-light">{phValue.toFixed(1)}</div>
+                        <div className="mt-2 h-1 bg-[#0d1212] rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-[#4DB6AC] to-[#2DD4BF] rounded-full"
+                            style={{ width: "70%", boxShadow: "0 0 10px #4DB6AC" }}
+                          />
                         </div>
-                      )}
-                    </button>
-                  ))}
+                      </div>
 
-                  {/* Grid lines for technical feel */}
-                  <div className="absolute inset-0 opacity-10">
+                      {/* Temperature Card */}
+                      <div
+                        className="bg-[#1a2222] rounded-2xl p-4 border border-[#4DB6AC]/20"
+                        style={{
+                          boxShadow: "0 0 20px rgba(77, 182, 172, 0.1), inset 0 1px 0 rgba(77, 182, 172, 0.1)",
+                        }}
+                      >
+                        <div className="text-gray-400 text-xs mb-2">Температура</div>
+                        <div className="text-[#4DB6AC] text-2xl font-light">{tempValue.toFixed(0)}°C</div>
+                        <div className="mt-2 h-1 bg-[#0d1212] rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-[#4DB6AC] to-[#2DD4BF] rounded-full"
+                            style={{ width: "85%", boxShadow: "0 0 10px #4DB6AC" }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Graph card */}
                     <div
-                      className="absolute inset-0"
+                      className="bg-[#1a2222] rounded-2xl p-4 mb-6 border border-[#4DB6AC]/10"
                       style={{
-                        backgroundImage:
-                          "linear-gradient(0deg, rgba(77,182,172,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(77,182,172,0.3) 1px, transparent 1px)",
-                        backgroundSize: "40px 40px",
+                        boxShadow: "inset 0 1px 0 rgba(77, 182, 172, 0.05)",
                       }}
-                    />
+                    >
+                      <div className="text-gray-400 text-xs mb-3">Параметры воды (7 дней)</div>
+                      {/* Mini chart */}
+                      <svg className="w-full h-16" viewBox="0 0 200 50" preserveAspectRatio="none">
+                        <defs>
+                          <linearGradient id="chartGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#4DB6AC" stopOpacity="0.4" />
+                            <stop offset="100%" stopColor="#4DB6AC" stopOpacity="0" />
+                          </linearGradient>
+                        </defs>
+                        <path
+                          d="M0,35 Q20,30 40,32 T80,28 T120,30 T160,25 T200,28"
+                          fill="none"
+                          stroke="#4DB6AC"
+                          strokeWidth="2"
+                          style={{ filter: "drop-shadow(0 0 6px #4DB6AC)" }}
+                        />
+                        <path
+                          d="M0,35 Q20,30 40,32 T80,28 T120,30 T160,25 T200,28 L200,50 L0,50 Z"
+                          fill="url(#chartGlow)"
+                        />
+                      </svg>
+                    </div>
+
+                    {/* Quick actions */}
+                    <div className="flex gap-2">
+                      <div className="flex-1 bg-[#1a2222] rounded-xl p-3 text-center border border-[#4DB6AC]/10">
+                        <Activity className="w-5 h-5 text-[#4DB6AC] mx-auto mb-1" />
+                        <span className="text-gray-400 text-[10px]">Мониторинг pH</span>
+                      </div>
+                      <div className="flex-1 bg-[#1a2222] rounded-xl p-3 text-center border border-[#4DB6AC]/10">
+                        <Droplets className="w-5 h-5 text-[#4DB6AC] mx-auto mb-1" />
+                        <span className="text-gray-400 text-[10px]">Контроль воды</span>
+                      </div>
+                      <div className="flex-1 bg-[#1a2222] rounded-xl p-3 text-center border border-[#4DB6AC]/10">
+                        <Wifi className="w-5 h-5 text-[#4DB6AC] mx-auto mb-1" />
+                        <span className="text-gray-400 text-[10px]">Умные уведомлен</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right: iPhone App Mockup */}
-          <div className="relative">
-            <div className="max-w-md mx-auto">
-              {/* iPhone frame */}
-              <div className="relative mx-auto w-[280px] h-[570px] bg-gray-900 rounded-[50px] p-3 shadow-2xl border-8 border-gray-800">
-                {/* Notch */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-gray-900 rounded-b-3xl z-10" />
-
-                {/* Screen */}
-                <div className="relative w-full h-full bg-gradient-to-b from-gray-50 to-white rounded-[40px] overflow-hidden">
-                  <div className="p-6 pt-12">
-                    {/* Status bar */}
-                    <div className="flex justify-between items-center mb-8 text-xs text-gray-500">
-                      <span>9:41</span>
-                      <div className="flex gap-1">
-                        <div className="w-4 h-4 rounded-full bg-[#4DB6AC]" />
-                        <div className="w-4 h-4 rounded-full bg-[#4DB6AC]" />
-                        <div className="w-4 h-4 rounded-full bg-[#4DB6AC]" />
-                      </div>
-                    </div>
-
-                    {/* App Header */}
-                    <h3 className="text-2xl font-light text-gray-900 mb-1">BioCube OS</h3>
-                    <p className="text-sm text-gray-500 mb-8">Главная панель</p>
-
-                    {/* Bio-Score Circle */}
-                    <div className="mb-8">
-                      <div className="relative w-40 h-40 mx-auto">
-                        <svg className="w-full h-full -rotate-90">
-                          <circle cx="80" cy="80" r="70" fill="none" stroke="#f0f0f0" strokeWidth="12" />
-                          <circle
-                            cx="80"
-                            cy="80"
-                            r="70"
-                            fill="none"
-                            stroke="url(#scoreGradient)"
-                            strokeWidth="12"
-                            strokeDasharray="440"
-                            strokeDashoffset="22"
-                            strokeLinecap="round"
-                          />
-                          <defs>
-                            <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                              <stop offset="0%" stopColor="#4DB6AC" />
-                              <stop offset="100%" stopColor="#2DD4BF" />
-                            </linearGradient>
-                          </defs>
-                        </svg>
-                        <div className="absolute inset-0 flex flex-col items-center justify-center">
-                          <div className="text-4xl font-light text-gray-900">98</div>
-                          <div className="text-xs text-gray-500">Bio-Score</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* pH Chart */}
-                    <div className="mb-6 p-4 bg-gradient-to-br from-[#4DB6AC]/10 to-blue-50 rounded-2xl">
-                      <div className="flex justify-between items-center mb-3">
-                        <span className="text-xs font-medium text-gray-700">Уровень pH</span>
-                        <span className="text-xs text-[#4DB6AC] font-semibold">7.2</span>
-                      </div>
-                      {/* Wave chart */}
-                      <svg className="w-full h-16" viewBox="0 0 200 50" preserveAspectRatio="none">
-                        <defs>
-                          <linearGradient id="waveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#4DB6AC" stopOpacity="0.3" />
-                            <stop offset="100%" stopColor="#4DB6AC" stopOpacity="0.05" />
-                          </linearGradient>
-                        </defs>
-                        <path
-                          d="M0,25 Q25,15 50,25 T100,25 T150,25 T200,25"
-                          fill="none"
-                          stroke="#4DB6AC"
-                          strokeWidth="2"
-                        />
-                        <path
-                          d="M0,25 Q25,15 50,25 T100,25 T150,25 T200,25 L200,50 L0,50 Z"
-                          fill="url(#waveGradient)"
-                        />
-                      </svg>
-                    </div>
-
-                    {/* Call Engineer Button */}
-                    <Button className="w-full bg-gradient-to-r from-[#4DB6AC] to-[#26A69A] hover:from-[#45a399] hover:to-[#1e8a82] text-white shadow-lg shadow-[#4DB6AC]/30 rounded-xl h-12">
-                      <Phone className="w-4 h-4 mr-2" />
-                      Вызвать инженера
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Description text */}
-              <div className="mt-8 text-center">
-                <p className="text-gray-700 leading-relaxed text-pretty">
-                  Мы оцифровали заботу о природе.{" "}
-                  <span className="font-semibold text-[#4DB6AC]">Радикальная прозрачность</span> и контроль каждого
-                  визита мастера через приложение.
-                </p>
-              </div>
+          {/* Right: Content */}
+          <div>
+            {/* Badge */}
+            <div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 border border-[#4DB6AC]/30"
+              style={{
+                background: "linear-gradient(135deg, rgba(77, 182, 172, 0.1), transparent)",
+                boxShadow: "0 0 20px rgba(77, 182, 172, 0.1)",
+              }}
+            >
+              <Activity className="w-4 h-4 text-[#4DB6AC]" />
+              <span className="text-sm text-[#4DB6AC] font-medium">BioCube OS Dashboard</span>
             </div>
+
+            {/* Headline */}
+            <h2 className="text-4xl md:text-5xl font-light text-white mb-6">
+              Технологии на&nbsp;страже{" "}
+              <span
+                className="bg-gradient-to-r from-[#4DB6AC] via-[#2DD4BF] to-[#06B6D4] bg-clip-text text-transparent"
+                style={{ textShadow: "0 0 40px rgba(77, 182, 172, 0.5)" }}
+              >
+                баланса
+              </span>
+            </h2>
+
+            {/* Description */}
+            <p className="text-gray-400 text-base mb-8 leading-relaxed">
+              BioCube OS мониторит 12&nbsp;параметров воды 24/7. Вы&nbsp;видите статус в&nbsp;приложении, 
+              а&nbsp;наши биологи получают уведомления и&nbsp;поддерживают здоровье экосистемы.
+            </p>
+
+            {/* Features list */}
+            <ul className="space-y-4 mb-8">
+              {features.map((feature, idx) => (
+                <li key={idx} className="flex items-start gap-3">
+                  <div
+                    className="w-6 h-6 rounded-full bg-[#4DB6AC]/20 flex items-center justify-center flex-shrink-0 mt-0.5"
+                    style={{ boxShadow: "0 0 10px rgba(77, 182, 172, 0.3)" }}
+                  >
+                    <Check className="w-3.5 h-3.5 text-[#4DB6AC]" />
+                  </div>
+                  <span className="text-gray-300">{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            {/* CTA Button */}
+            <Button
+              className="px-8 py-6 text-base rounded-full bg-gradient-to-r from-[#4DB6AC] to-[#26A69A] hover:from-[#45a399] hover:to-[#1e8a82] text-white"
+              style={{
+                boxShadow: "0 0 30px rgba(77, 182, 172, 0.4), 0 10px 40px rgba(77, 182, 172, 0.2)",
+              }}
+            >
+              Попробовать демо
+            </Button>
           </div>
         </div>
       </div>

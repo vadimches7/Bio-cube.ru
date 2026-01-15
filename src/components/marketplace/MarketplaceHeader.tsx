@@ -11,7 +11,7 @@ export function MarketplaceHeader() {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img
-              src="/biocube-logo.png"
+              src="/images/brand/biocube-logo.png"
               alt="BioCube"
               className="h-12 object-contain"
             />
