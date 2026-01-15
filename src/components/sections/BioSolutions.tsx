@@ -55,14 +55,14 @@ const solutions: Solution[] = [
     title: "Визуальная тишина",
     subtitle: "Японский дзен-сад",
     description:
-      "Снижение уровня кортизола на&nbsp;23% за&nbsp;15&nbsp;минут созерцания. Ваш личный остров спокойствия, который поддерживает наша команда биологов.",
+      "Снижение уровня кортизола на 23% за 15 минут созерцания. Ваш личный остров спокойствия, который поддерживает наша команда биологов.",
     benefits: [
       "Снижение кортизола на 23%",
       "Нормализация сердечного ритма",
       "Улучшение фокуса внимания",
       "Сервис под ключ",
     ],
-    image: "/images/hero/aquarium-hero.jpg",
+    image: "/images/solutions/zen-garden.jpg",
     specs: "24-26°C • pH 6.8-7.2 • Iwagumi Style",
     themeColor: "mint",
     reversed: false,
@@ -74,14 +74,14 @@ const solutions: Solution[] = [
     title: "Глубокий сон по расписанию",
     subtitle: "Программируемое освещение",
     description:
-      "Программируемые циклы рассветов и&nbsp;закатов синхронизируют ваши биологические часы. Настройку выполняют наши специалисты.",
+      "Программируемые циклы рассветов и закатов синхронизируют ваши биологические часы. Настройку выполняют наши специалисты.",
     benefits: [
       "Мелатонин +34%",
       "Синхронизация биоритмов",
       "Программируемые циклы света",
       "Качество сна с 1-й недели",
     ],
-    image: "/images/solutions/room-after.jpg",
+    image: "/images/solutions/sonakva.jpg",
     specs: "2700K-6500K • Circadian Control • Сервис",
     themeColor: "blue",
     reversed: true,
@@ -93,7 +93,7 @@ const solutions: Solution[] = [
     title: "Лёгкие вашего дома",
     subtitle: "Тропический палюдариум",
     description:
-      "Живой тропический лес, который фильтрует воздух и&nbsp;поддерживает идеальную влажность 60%. Уход за&nbsp;растениями — на&nbsp;нас.",
+      "Живой тропический лес, который фильтрует воздух и поддерживает идеальную влажность 60%. Уход за растениями — на нас.",
     benefits: [
       "Влажность 55-65%",
       "Очистка воздуха растениями",
@@ -175,71 +175,61 @@ export function BioSolutions() {
                 transition={{ duration: 0.8, delay: index * 0.1 }}
               >
                 {/* ═══════════════════════════════════════════════════════
-                    МОБИЛЬНАЯ ВЕРСИЯ: Карточка поверх изображения
+                    МОБИЛЬНАЯ ВЕРСИЯ: Единый стиль карточек
                 ═══════════════════════════════════════════════════════ */}
                 <div className="lg:hidden relative">
-                  {/* Контейнер изображения */}
-                  <div className="relative">
-                    {/* Фоновое свечение */}
-                    <div
-                      className="absolute -inset-4 rounded-3xl blur-2xl -z-10"
-                      style={{
-                        background: `radial-gradient(ellipse at center, ${theme.primary}25 0%, transparent 70%)`,
-                      }}
-                    />
-                    
-                    {/* Изображение */}
-                    <div 
-                      className={`relative rounded-2xl overflow-hidden shadow-xl ${
-                        isPortrait ? "aspect-[3/4] max-w-[280px] mx-auto" : "aspect-[4/3]"
-                      }`}
-                    >
+                  {/* Фоновое свечение */}
+                  <div
+                    className="absolute -inset-4 rounded-3xl blur-2xl -z-10"
+                    style={{
+                      background: `radial-gradient(ellipse at center, ${theme.primary}20 0%, transparent 70%)`,
+                    }}
+                  />
+                  
+                  {/* Карточка */}
+                  <div 
+                    className="relative rounded-2xl overflow-hidden shadow-xl"
+                    style={{
+                      background: `linear-gradient(135deg, ${theme.primary}08, white)`,
+                    }}
+                  >
+                    {/* Изображение — фиксированный aspect ratio для всех */}
+                    <div className="relative aspect-[16/10] overflow-hidden">
                       <img
                         src={solution.image}
                         alt={solution.title}
                         className="w-full h-full object-cover"
                       />
                       
-                      {/* Градиент для текста */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                      {/* Градиент overlay */}
+                      <div 
+                        className="absolute inset-0"
+                        style={{
+                          background: `linear-gradient(to bottom, transparent 30%, ${theme.primary}15 60%, rgba(0,0,0,0.7) 100%)`,
+                        }}
+                      />
                       
-                      {/* Контент поверх изображения */}
-                      <div className="absolute bottom-0 left-0 right-0 p-5">
-                        {/* Бейдж */}
+                      {/* Бейдж на изображении */}
+                      <div className="absolute top-4 left-4">
                         <div
-                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border mb-3"
+                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full backdrop-blur-md"
                           style={{
-                            borderColor: `${theme.primary}60`,
-                            backgroundColor: `${theme.primary}20`,
+                            backgroundColor: `${theme.primary}90`,
                           }}
                         >
-                          <span
-                            className="text-[9px] font-semibold tracking-wider text-white"
-                          >
+                          <span className="text-[9px] font-bold tracking-wider text-white uppercase">
                             {solution.badge}
                           </span>
                         </div>
-                        
-                        {/* Заголовок */}
-                        <div className="flex items-center gap-2 mb-2">
-                          <PingDot color={theme.primary} />
-                          <h3 className="text-xl font-semibold text-white">
-                            {solution.title}
-                          </h3>
-                        </div>
-                        
-                        {/* Подзаголовок */}
-                        <p style={{ color: theme.primary }} className="text-sm font-medium mb-3">
-                          {solution.subtitle}
-                        </p>
-                        
-                        {/* Specs */}
+                      </div>
+                      
+                      {/* Specs внизу изображения */}
+                      <div className="absolute bottom-3 left-4 right-4">
                         <div
-                          className="inline-flex items-center px-3 py-1.5 rounded-full backdrop-blur-xl border text-[10px] font-medium"
+                          className="inline-flex items-center px-3 py-1.5 rounded-full backdrop-blur-xl text-[10px] font-medium"
                           style={{
-                            background: "rgba(255,255,255,0.15)",
-                            borderColor: `${theme.primary}40`,
-                            color: "white",
+                            background: "rgba(255,255,255,0.9)",
+                            color: theme.primary,
                           }}
                         >
                           <span
@@ -250,27 +240,42 @@ export function BioSolutions() {
                         </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  {/* Описание и преимущества под картинкой */}
-                  <div className="mt-6 px-2">
-                    <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                      {solution.description}
-                    </p>
                     
-                    <ul className="grid grid-cols-2 gap-2">
-                      {solution.benefits.map((benefit, i) => (
-                        <li key={i} className="flex items-center gap-2">
-                          <div
-                            className="flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center"
-                            style={{ backgroundColor: `${theme.primary}15` }}
-                          >
-                            <Check className="w-2.5 h-2.5" style={{ color: theme.primary }} />
-                          </div>
-                          <span className="text-xs text-slate-700">{benefit}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    {/* Контент под изображением */}
+                    <div className="p-5">
+                      {/* Заголовок */}
+                      <div className="flex items-center gap-2 mb-2">
+                        <PingDot color={theme.primary} />
+                        <h3 className="text-xl font-semibold text-slate-900">
+                          {solution.title}
+                        </h3>
+                      </div>
+                      
+                      {/* Подзаголовок */}
+                      <p style={{ color: theme.primary }} className="text-sm font-medium mb-3">
+                        {solution.subtitle}
+                      </p>
+                      
+                      {/* Описание */}
+                      <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                        {solution.description}
+                      </p>
+                      
+                      {/* Преимущества */}
+                      <ul className="grid grid-cols-2 gap-2">
+                        {solution.benefits.map((benefit, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <div
+                              className="flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center mt-0.5"
+                              style={{ backgroundColor: `${theme.primary}15` }}
+                            >
+                              <Check className="w-2.5 h-2.5" style={{ color: theme.primary }} />
+                            </div>
+                            <span className="text-xs text-slate-700 leading-tight">{benefit}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
 
