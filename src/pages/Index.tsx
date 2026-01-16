@@ -2,6 +2,7 @@ import { NewHeader } from "@/components/sections/NewHeader";
 import { NewHeroSection } from "@/components/sections/NewHeroSection";
 import { PartnersTrustBar } from "@/components/sections/PartnersTrustBar";
 import { BioSolutions } from "@/components/sections/BioSolutions";
+import { EngineeringCore } from "@/components/sections/EngineeringCore";
 // import { SwimmingFish } from "@/components/SwimmingFish"; // TODO: Включить когда будет видео с прозрачным фоном
 import { ThreePaths } from "@/components/sections/ThreePaths";
 import { IntelligentCore } from "@/components/sections/IntelligentCore";
@@ -54,11 +55,20 @@ const Index = () => {
       <NewHeader />
       <main>
         {/* ═══════════════════════════════════════════════════════════════
-            🌅 СВЕТ: Начало путешествия
+            🌅 СВЕТ: Начало путешествия (Light Section)
         ═══════════════════════════════════════════════════════════════ */}
         <NewHeroSection />
         <PartnersTrustBar />
+        
+        {/* ═══════════════════════════════════════════════════════════════
+            📦 ПРОДУКТ: Zigzag Product Showcase (Light)
+        ═══════════════════════════════════════════════════════════════ */}
         <BioSolutions />
+        
+        {/* ═══════════════════════════════════════════════════════════════
+            🔧 ENGINEERING: Exploded View / X-Ray Section (Light - Clinical Zen)
+        ═══════════════════════════════════════════════════════════════ */}
+        <EngineeringCore />
         
         {/* ═══════════════════════════════════════════════════════════════
             🌊 ПОГРУЖЕНИЕ: Переход в технологическую глубину
@@ -66,31 +76,45 @@ const Index = () => {
         <DiveTransition />
         
         {/* ═══════════════════════════════════════════════════════════════
-            🔬 ГЛУБИНА: Технологии и наука BioCube
+            🔬 TECH BLOCK: IoT/App + Stats/Biometrics (Dark Section)
+            Непрерывный тёмный блок технологий
         ═══════════════════════════════════════════════════════════════ */}
-        <ThreePaths />
         <IntelligentCore />
+        <BioScoreDashboard />
         
         {/* ═══════════════════════════════════════════════════════════════
-            ☀️ ВЫНЫРИВАНИЕ: Возврат к свету и выбору
+            ☀️ ВЫНЫРИВАНИЕ: Возврат к свету
         ═══════════════════════════════════════════════════════════════ */}
         <SurfaceTransition />
         
         {/* ═══════════════════════════════════════════════════════════════
-            🛒 ВЫБОР: Продукты и возможности
+            🏠 LIFESTYLE: Interior/Lifestyle Section (Light - "Clinical Zen")
+        ═══════════════════════════════════════════════════════════════ */}
+        <VirtualTryOn />
+        
+        {/* ═══════════════════════════════════════════════════════════════
+            🎯 3 ПУТИ: Навигация (Light)
+        ═══════════════════════════════════════════════════════════════ */}
+        <ThreePaths />
+        
+        {/* ═══════════════════════════════════════════════════════════════
+            🔍 ДЕТАЛИ: Macro World (Light - placeholder area)
         ═══════════════════════════════════════════════════════════════ */}
         <MacroWorld />
-        <VirtualTryOn />
+        
         <SoftLightTransition />
+        
+        {/* ═══════════════════════════════════════════════════════════════
+            💰 PRICING: Тарифы и сравнение (Light)
+        ═══════════════════════════════════════════════════════════════ */}
         <ParticipationLevels />
-        <BioScoreDashboard />
+        <ComparisonTable />
         <TrustBar />
         
         {/* ═══════════════════════════════════════════════════════════════
-            💎 ФИНАЛ: Брендовое завершение
+            💎 ФИНАЛ: Брендовое завершение и контакт
         ═══════════════════════════════════════════════════════════════ */}
         <BrandTransition />
-        <ComparisonTable />
         <LeadForm />
         <CTASection />
       </main>
