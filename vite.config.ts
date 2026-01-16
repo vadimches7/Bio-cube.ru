@@ -6,9 +6,8 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::",
-    port: 8080,
-    open: true,
+    host: "127.0.0.1",
+    port: 5173,
   },
   build: {
     // Make the production bundle more compatible with older browsers/WebViews (esp. Safari)
